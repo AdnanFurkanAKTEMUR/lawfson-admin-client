@@ -16,15 +16,18 @@ const handler = NextAuth({
       credentials: {},
       //@ts-ignore
       async authorize(credantials, req) {
-        const { _id, name, surname, role, createdAt, updatedAt } = credantials as {
-          _id: string;
-          name: string;
-          surname: string;
-          role: number;
+        const { id, userName, email, role, company, companyId, createdAt, updatedAt } = credantials as {
+          id: number;
+          userName: string;
+          email: string;
+          role: string;
+          company: any;
+          companyId: number;
           createdAt: string;
           updatedAt: string;
         };
-        return { _id, name, surname, role, createdAt, updatedAt };
+        console.log(companyId, company);
+        return { id, userName, email, company, companyId, role, createdAt, updatedAt };
       },
     }),
   ],
@@ -39,10 +42,12 @@ const handler = NextAuth({
       //   token.role = session.role;
       // }
       if (user) {
-        token._id = user._id;
-        token.name = user.name;
+        token.id = user.id;
+        token.userName = user.userName;
         token.role = user.role;
-        token.surname = user.surname;
+        token.email = user.email;
+        token.company = user.company;
+        token.companyId = user.companyId;
         token.updatedAt = user.updatedAt;
         token.createdAt = user.createdAt;
       }
@@ -50,10 +55,12 @@ const handler = NextAuth({
     },
     session({ session, token }: any) {
       if (token && session.user) {
-        session.user._id = token._id;
-        session.user.name = token.name;
+        session.user.id = token.id;
+        session.user.userName = token.userName;
         session.user.role = token.role;
-        session.user.surname = token.surname;
+        session.user.email = token.email;
+        session.user.company = token.company;
+        session.user.companyId = token.companyId;
         session.user.updatedAt = token.updatedAt;
         session.user.createdAt = token.createdAt;
         session.accessToken = token;

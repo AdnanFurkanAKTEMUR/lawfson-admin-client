@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export default withAuth(
   async function middleware(request: NextRequestWithAuth) {
     // Korunacak yolların listesi
-    const protectedPaths = ["/deneme", "/deneme1"];
+    const protectedPaths = ["/deneme", "/deneme1", "/"];
 
     // Eğer istek korunan bir yola gidiyorsa ve kullanıcı giriş yapmamışsa yönlendirme yap
     if (protectedPaths.some((path) => request.nextUrl.pathname.startsWith(path)) && !request.nextauth.token) {
@@ -21,5 +21,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/deneme"],
+  matcher: ["/deneme", "/"],
 };

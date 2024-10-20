@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ApolloWrapper } from "@/apolloConfig/apolloClientWrapper";
 import { NextAuthProvider } from "@/nextAuthProvider/NextAuthProvider";
+import Sidebar from "./_components/layout/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,17 @@ export default function RootLayout({
     <html lang="en">
       <ApolloWrapper>
         <NextAuthProvider>
-          <body>{children}</body>
+          <body>
+            {" "}
+            <div className="relative flex min-h-screen">
+              {/* Sidebar */}
+              <Sidebar /> {/* Sidebar bileşenini çağırıyoruz */}
+              {/* Main content */}
+              <div className="flex-1 p-6 bg-gray-100 pt-16 md:pt-6">
+                {children} {/* Dinamik sayfa içeriği */}
+              </div>
+            </div>
+          </body>
         </NextAuthProvider>
       </ApolloWrapper>
     </html>
