@@ -14,3 +14,12 @@ export const PRODUCT_OF_COMPANY = gql`
     }
   }
 `;
+
+export const DELETE_PRODUCT = gql`
+  mutation DeleteProduct($input: getWithId) {
+    deleteProduct(input: $input) {
+      status
+      msg
+    }
+  }
+`;

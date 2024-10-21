@@ -4,6 +4,7 @@ import "./globals.css";
 import { ApolloWrapper } from "@/apolloConfig/apolloClientWrapper";
 import { NextAuthProvider } from "@/nextAuthProvider/NextAuthProvider";
 import Sidebar from "./_components/layout/sidebar";
+import Navbar from "./_components/layout/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,8 +28,11 @@ export default function RootLayout({
               {/* Sidebar */}
               <Sidebar /> {/* Sidebar bileşenini çağırıyoruz */}
               {/* Main content */}
-              <div className="flex-1 p-6 bg-gray-100 pt-16 md:pt-6">
-                {children} {/* Dinamik sayfa içeriği */}
+              <div className="flex-1">
+                <Navbar />
+                <div className="flex-1 p-6 bg-gray-100 pt-16 md:pt-6">
+                  {children} {/* Dinamik sayfa içeriği */}
+                </div>
               </div>
             </div>
           </body>

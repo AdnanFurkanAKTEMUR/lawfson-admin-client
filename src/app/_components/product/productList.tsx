@@ -1,8 +1,8 @@
 "use client";
-import { PRODUCT_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/productResolver";
-import { useQuery } from "@apollo/client";
+import { DELETE_PRODUCT, PRODUCT_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/productResolver";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { Table, Input, Button, Space, Popconfirm, Spin } from "antd";
+import { Table, Input, Button, Space, Popconfirm, Spin, notification } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useRouter } from "next/navigation";
 import Image from "next/image"; // Next.js'in Image bileşenini kullanalım
@@ -18,7 +18,8 @@ interface Product {
 }
 
 function ProductListComp() {
-  const { data: productListData, error: productListError, loading: productListLoading } = useQuery(PRODUCT_OF_COMPANY);
+  const { data: productListData, error: productListError, loading: productListLoading, refetch: refetchProducts } = useQuery(PRODUCT_OF_COMPANY);
+  const [dpMutate, { data: dpData, error: dpError, loading: dpLoading }] = useMutation(DELETE_PRODUCT);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState<Product[]>([]);
   const router = useRouter();
@@ -39,7 +40,20 @@ function ProductListComp() {
 
   // Silme işlemi
   const handleDelete = (id: number) => {
-    console.log("Silindi:", id);
+    dpMutate({ variables: { input: { id: id } } })
+      .then(() => {
+        notification.success({
+          message: "Silme başarılı!",
+          description: "Ürün başarıyla silindi.",
+        });
+        refetchProducts();
+      })
+      .catch((e) => {
+        notification.error({
+          message: "Hata!",
+          description: "Ürün oluşturulurken bir hata oluştu.",
+        });
+      });
   };
 
   // Tarih formatlama (timestamp'i Türkçe biçime çevirme)
