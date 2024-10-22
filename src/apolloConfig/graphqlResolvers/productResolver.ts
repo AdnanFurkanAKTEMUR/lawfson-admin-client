@@ -23,3 +23,12 @@ export const DELETE_PRODUCT = gql`
     }
   }
 `;
+
+export const CREATE_PRODUCT = gql`
+  mutation CreateProduct($input: createProductInput) {
+    createProduct(input: $input) {
+      id
+      productName
+    }
+  }
+`;

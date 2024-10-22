@@ -24,13 +24,13 @@ export default function RootLayout({
         <NextAuthProvider>
           <body>
             {" "}
-            <div className="relative flex min-h-screen">
+            <div className="relative flex min-h-screen bg-gray-100">
               {/* Sidebar */}
               <Sidebar /> {/* Sidebar bileşenini çağırıyoruz */}
               {/* Main content */}
               <div className="flex-1">
                 <Navbar />
-                <div className="flex-1 p-6 bg-gray-100 pt-16 md:pt-6">
+                <div className="flex-1 p-6 pt-16 md:pt-6">
                   {children} {/* Dinamik sayfa içeriği */}
                 </div>
               </div>

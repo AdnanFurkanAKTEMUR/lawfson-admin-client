@@ -1,7 +1,7 @@
 import React from "react";
 
-function ProductCrate() {
+function ProductCreate() {
   return <div>ProductCrate</div>;
 }
 
-export default ProductCrate;
+export default ProductCreate;
