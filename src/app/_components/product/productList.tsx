@@ -132,7 +132,7 @@ function ProductListComp() {
         <Space size="middle">
           <Button
             type="primary"
-            onClick={() => router.push(`/edit/${record.id}`)}
+            onClick={() => router.push(`/productupdate/${record.id}`)}
           >
             Düzenle
           </Button>

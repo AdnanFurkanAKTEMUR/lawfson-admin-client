@@ -1,7 +1,12 @@
+import ProductCreateComp from "@/app/_components/product/productCreate";
 import React from "react";
 
 function ProductCreate() {
-  return <div>ProductCrate</div>;
+  return (
+    <>
+      <ProductCreateComp />
+    </>
+  );
 }
 
 export default ProductCreate;

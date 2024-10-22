@@ -15,6 +15,21 @@ export const PRODUCT_OF_COMPANY = gql`
   }
 `;
 
+export const GET_PRODUCT = gql`
+  query GetProduct($input: getWithId) {
+    getProduct(input: $input) {
+      id
+      productName
+      updatedAt
+      createdAt
+      category {
+        id
+        categoryName
+      }
+    }
+  }
+`;
+
 export const DELETE_PRODUCT = gql`
   mutation DeleteProduct($input: getWithId) {
     deleteProduct(input: $input) {
@@ -29,6 +44,21 @@ export const CREATE_PRODUCT = gql`
     createProduct(input: $input) {
       id
       productName
+    }
+  }
+`;
+
+export const UPDATE_PRODUCT = gql`
+  mutation UpdateProduct($input: updateProductInput) {
+    updateProduct(input: $input) {
+      category {
+        categoryName
+        id
+      }
+      createdAt
+      updatedAt
+      productName
+      id
     }
   }
 `;
