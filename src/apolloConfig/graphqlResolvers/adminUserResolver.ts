@@ -15,3 +15,26 @@ export const ADMIN_USER_LOGIN = gql`
     }
   }
 `;
+
+export const ADMINUSERS_OF_COMPANY = gql`
+  query AdminUsersOfCompany {
+    adminUsersOfCompany {
+      id
+      userName
+      email
+      role
+      phone
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const ADMINUSER_DELETE = gql`
+  mutation AdminUserDelete($input: getWithId) {
+    adminUserDelete(input: $input) {
+      status
+      msg
+    }
+  }
+`;

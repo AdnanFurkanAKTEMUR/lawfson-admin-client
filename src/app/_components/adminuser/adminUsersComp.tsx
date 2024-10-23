@@ -1,83 +1,70 @@
 "use client";
-import { DELETE_PRODUCT, PRODUCT_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/productResolver";
-import { useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { Table, Input, Button, Space, Popconfirm, Spin, notification } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { useRouter } from "next/navigation";
-import Image from "next/image"; // Next.js'in Image bileşenini kullanalım
+
+import { ADMINUSER_DELETE, ADMINUSERS_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/adminUserResolver";
 import formatDate from "@/helpers/formatDate";
+import { useMutation, useQuery } from "@apollo/client";
+import { Button, Input, notification, Popconfirm, Space, Spin } from "antd";
+import Table, { ColumnsType } from "antd/es/table";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-interface Product {
+type AdminUser = {
   id: number;
-  productName: string;
-  image?: string;
-  category: {
-    categoryName: string;
-  };
-  createdAt: string; // timestamp
-}
+  userName: string;
+  email: string;
+  role: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-function ProductListComp() {
-  const { data: productListData, error: productListError, loading: productListLoading, refetch: refetchProducts } = useQuery(PRODUCT_OF_COMPANY);
-  const [dpMutate, { data: dpData, error: dpError, loading: dpLoading }] = useMutation(DELETE_PRODUCT);
+function AdminUsersComp() {
+  const { data: auData, error: auError, loading: auLoading, refetch: refetchAdminUsers } = useQuery(ADMINUSERS_OF_COMPANY);
+  const [deleteAdminUserMutate, { data: deleteAdminUserData, error: deleteAdminUserError, loading: deleteAdminUserLoading }] = useMutation(ADMINUSER_DELETE);
+  console.log(auData?.adminUsersOfCompany);
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<Product[]>([]);
+  const [filteredData, setFilteredData] = useState<AdminUser[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    if (productListData?.productsOfCompany) {
-      setFilteredData(productListData.productsOfCompany);
+    if (auData?.adminUsersOfCompany) {
+      setFilteredData(auData.adminUsersOfCompany);
     }
-  }, [productListData]);
+  }, [auData]);
 
   // Arama işlevi
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
-    const filtered = productListData.productsOfCompany.filter((product: Product) => product.productName.toLowerCase().includes(value) || product.category.categoryName.toLowerCase().includes(value));
+    const filtered = auData?.adminUsersOfCompany.filter((admin: AdminUser) => admin.userName.toLowerCase().includes(value) || admin.email.toLocaleLowerCase().includes(value));
     setFilteredData(filtered);
     setSearchText(value);
   };
 
   // Silme işlemi
   const handleDelete = (id: number) => {
-    dpMutate({ variables: { input: { id: id } } })
+    deleteAdminUserMutate({ variables: { input: { id: id } } })
       .then(() => {
         notification.success({
           message: "Silme başarılı!",
-          description: "Ürün başarıyla silindi.",
+          description: "Kullanıcı başarıyla silindi.",
         });
-        refetchProducts();
+        refetchAdminUsers();
       })
       .catch((e) => {
         notification.error({
           message: "Hata!",
-          description: "Ürün silinirken bir hata meydana geldi!",
+          description: "Kullanıcı silinirken bir hata oluştu.",
         });
       });
   };
 
   // Ant Design tabloları için kolonlar
-  const columns: ColumnsType<Product> = [
-    {
-      title: "Resim",
-      dataIndex: "image",
-      key: "image",
-      render: (text, record) => (
-        <Image
-          src={record.image ? record.image : "/noimage.jpg"}
-          alt={record.productName}
-          width={50}
-          height={50}
-          className="rounded-md"
-        />
-      ),
-    },
+  const columns: ColumnsType<AdminUser> = [
     {
       title: "Ürün Adı",
-      dataIndex: "productName",
-      key: "productName",
-      sorter: (a, b) => a.productName.localeCompare(b.productName),
+      dataIndex: "userName",
+      key: "userName",
+      sorter: (a, b) => a.userName.localeCompare(b.userName),
       filterDropdown: () => (
         <div className="p-4">
           <Input
@@ -88,13 +75,13 @@ function ProductListComp() {
           />
         </div>
       ),
-      onFilter: (value, record) => record.productName.toLowerCase().includes((value as string).toLowerCase()),
+      onFilter: (value, record) => record.userName.toLowerCase().includes((value as string).toLowerCase()),
     },
     {
-      title: "Kategori",
-      dataIndex: ["category", "categoryName"],
-      key: "categoryName",
-      sorter: (a, b) => a.category.categoryName.localeCompare(b.category.categoryName),
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email),
       filterDropdown: () => (
         <div className="p-4">
           <Input
@@ -105,7 +92,13 @@ function ProductListComp() {
           />
         </div>
       ),
-      onFilter: (value, record) => record.category.categoryName.toLowerCase().includes((value as string).toLowerCase()),
+      onFilter: (value, record) => record.email.toLowerCase().includes((value as string).toLowerCase()),
+    },
+    {
+      title: "Yetki",
+      dataIndex: "role",
+      key: "role",
+      // render: (text) => formatDate(text), // timestamp'i Türkçe formatta gösteriyoruz
     },
     {
       title: "Oluşturulma Tarihi",
@@ -139,19 +132,19 @@ function ProductListComp() {
   ];
 
   // Loading ekranı
-  if (productListLoading) {
+  if (auLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center">
         <Spin size="large" />
-        <p className="mt-4 text-lg font-semibold text-gray-600">Ürünleriniz getiriliyor...</p>
+        <p className="mt-4 text-lg font-semibold text-gray-600">Kullanıcılar getiriliyor...</p>
       </div>
     );
   }
 
   // Error ekranı
-  if (productListError) {
+  if (auError) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center mt-4">
         <div className="text-center">
           <p className="text-2xl font-bold text-red-600">Bir hata meydana geldi!</p>
         </div>
@@ -171,4 +164,4 @@ function ProductListComp() {
   );
 }
 
-export default ProductListComp;
+export default AdminUsersComp;
