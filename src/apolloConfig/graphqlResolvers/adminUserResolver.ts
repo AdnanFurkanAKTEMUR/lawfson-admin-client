@@ -38,3 +38,12 @@ export const ADMINUSER_DELETE = gql`
     }
   }
 `;
+
+export const ADMINUSER_CREATE = gql`
+  mutation AdminUserCreate($input: createAdminUserInput) {
+    adminUserCreate(input: $input) {
+      id
+      userName
+    }
+  }
+`;

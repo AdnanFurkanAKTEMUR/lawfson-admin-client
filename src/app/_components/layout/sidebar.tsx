@@ -88,10 +88,10 @@ export default function Sidebar() {
                 {isUsersOpen && (
                   <ul className="pl-4 mt-2">
                     <li className="py-1">
-                      <a href="/users/view">Kullanıcıları Gör</a>
+                      <a href="/adminusers">Kullanıcıları Gör</a>
                     </li>
                     <li className="py-1">
-                      <a href="/users/create">Kullanıcı Oluştur</a>
+                      <a href="/createadminuser">Kullanıcı Oluştur</a>
                     </li>
                   </ul>
                 )}

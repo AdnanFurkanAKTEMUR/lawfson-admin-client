@@ -61,7 +61,7 @@ function AdminUsersComp() {
   // Ant Design tabloları için kolonlar
   const columns: ColumnsType<AdminUser> = [
     {
-      title: "Ürün Adı",
+      title: "Kullanıcı Adı",
       dataIndex: "userName",
       key: "userName",
       sorter: (a, b) => a.userName.localeCompare(b.userName),
