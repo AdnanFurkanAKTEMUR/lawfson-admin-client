@@ -21,7 +21,6 @@ type AdminUser = {
 function AdminUsersComp() {
   const { data: auData, error: auError, loading: auLoading, refetch: refetchAdminUsers } = useQuery(ADMINUSERS_OF_COMPANY);
   const [deleteAdminUserMutate, { data: deleteAdminUserData, error: deleteAdminUserError, loading: deleteAdminUserLoading }] = useMutation(ADMINUSER_DELETE);
-  console.log(auData?.adminUsersOfCompany);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState<AdminUser[]>([]);
   const router = useRouter();
@@ -114,7 +113,7 @@ function AdminUsersComp() {
         <Space size="middle">
           <Button
             type="primary"
-            onClick={() => router.push(`/productupdate/${record.id}`)}
+            onClick={() => router.push(`/adminuserupdate/${record.id}`)}
           >
             Düzenle
           </Button>

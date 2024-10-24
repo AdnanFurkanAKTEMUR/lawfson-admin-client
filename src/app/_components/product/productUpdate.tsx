@@ -58,7 +58,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
       await updateProductMutation({
         variables: {
           input: {
-            id:  parseInt(productId),
+            id: parseInt(productId),
             categoryId: values?.categoryId,
             productName: values?.productName,
           },
@@ -83,6 +83,10 @@ function ProductUpdateComp({ productId }: { productId: string }) {
         />
       </div>
     );
+  }
+
+  if (pError) {
+    return <p className="text-red-500">Ürün bulunamadı!</p>;
   }
 
   return (

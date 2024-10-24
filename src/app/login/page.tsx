@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN, {
     onCompleted: async (data) => {
       if (data && data.adminUserLogin) {
@@ -25,7 +25,7 @@ export default function Login() {
           createdAt: data.adminUserLogin.createdAt,
           updatedAt: data.adminUserLogin.updatedAt,
         });
-        router.push("/")
+        router.push("/");
         if (res?.error) {
           notification.error({
             message: "NextAuth Giriş Başarısız",

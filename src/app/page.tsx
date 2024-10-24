@@ -10,12 +10,10 @@ export default function Home() {
   const { data, error, loading } = useQuery(SAY_HELLO);
   return (
     <div>
-  
       {data?.sayHello.hello}{" "}
       <div>
         <SayHello />
       </div>
-      <button onClick={() => signOut()}> çıkış yap</button>
     </div>
   );
 }

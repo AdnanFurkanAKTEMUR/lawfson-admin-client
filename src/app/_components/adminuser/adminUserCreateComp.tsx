@@ -46,9 +46,12 @@ function AdminUserCreateComp() {
         <Form.Item
           label="Email"
           name="email"
-          rules={[{ required: true, message: "Lütfen email giriniz" }]}
+          rules={[{ required: true, message: "Lütfen email giriniz", type: "email" }]}
         >
-          <Input placeholder="Email" />
+          <Input
+            placeholder="Email"
+            type="email"
+          />
         </Form.Item>
 
         <Form.Item
@@ -102,7 +105,7 @@ function AdminUserCreateComp() {
             htmlType="submit"
             loading={auLoading}
           >
-            Ürün Oluştur
+            Oluştur
           </Button>
         </Form.Item>
       </Form>
