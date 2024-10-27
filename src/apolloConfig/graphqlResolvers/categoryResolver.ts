@@ -10,3 +10,12 @@ export const GETALL_CAT = gql`
     }
   }
 `;
+
+export const GETCATEGORYLEAFS = gql`
+  query CategoryLeafs {
+    categoryLeafs {
+      id
+      fullPathName
+    }
+  }
+`;
