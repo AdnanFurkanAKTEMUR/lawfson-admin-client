@@ -4,7 +4,6 @@ export const MESSAGES_OF_COMPANY = gql`
   query MessagesOfCompany {
     messagesOfCompany {
       id
-      adminNote
       appUser {
         userName
         id
@@ -28,7 +27,6 @@ export const MESSAGES_OF_COMPANY = gql`
 export const MESSAGE = gql`
   query MessageGet($input: getWithId) {
     messageGet(input: $input) {
-      adminNote
       appUser {
         id
         email

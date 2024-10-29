@@ -4,6 +4,7 @@ import { MESSAGE, UPDATE_MESSAGE } from "@/apolloConfig/graphqlResolvers/message
 import { useMutation, useQuery } from "@apollo/client";
 import { Card, Input, Checkbox, Button, Typography, Row, Col, notification } from "antd";
 import { useState, useEffect } from "react";
+import AdminNotesComp from "./adminNotesComp";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -16,7 +17,6 @@ const styles = {
 
 interface MessageType {
   id: number;
-  adminNote: string;
   appUser: {
     id: number;
     userName: string;
@@ -65,15 +65,12 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
   });
 
   const [updateMessageMutation, { loading: uLoading }] = useMutation(UPDATE_MESSAGE);
-
-  const [adminNote, setAdminNote] = useState("");
   const [isReturn, setIsReturn] = useState(false);
 
   const message: MessageType | undefined = getMessageData?.messageGet;
 
   useEffect(() => {
     if (message) {
-      setAdminNote(message.adminNote || "");
       setIsReturn(message.isReturn || false);
     }
   }, [message]);
@@ -84,7 +81,6 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
         variables: {
           input: {
             id: parseInt(messageId),
-            adminNote,
             isReturn,
           },
         },
@@ -112,29 +108,6 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
         gutter={[16, 16]}
         className="mb-4"
       >
-        {/* Ürün Bilgileri Kartı */}
-        <Col
-          xs={24}
-          md={8}
-        >
-          <Card
-            title={<span className={styles.cardHeader}>Ürün Bilgileri</span>}
-            className={`${styles.shadow} ${styles.cardBody}`}
-          >
-            <p>
-              <Text strong>Ürün Adı:</Text> {message?.product.productName || "Ürün bulunamadı"}
-            </p>
-            <p>
-              <Text strong>Kategori:</Text> {message?.product.category.categoryName || "Kategori bulunamadı"}
-            </p>
-            <img
-              src={message?.product.image || "/noimage.jpg"}
-              alt="Ürün Görseli"
-              className="mt-2 w-full h-32 object-cover rounded-md border border-gray-300"
-              style={{ objectFit: "cover", height: "150px", width: "100%" }}
-            />
-          </Card>
-        </Col>
         {/* Kullanıcı Bilgileri Kartı */}
         <Col
           xs={24}
@@ -183,9 +156,41 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
           </Card>
         </Col>
       </Row>
+      <Row>
+        {/* Ürün Bilgileri Kartı */}
+        <Col
+          xs={24}
+          md={8}
+        >
+          <img
+            src={message?.product.image || "/noimage.jpg"}
+            alt="Ürün Görseli"
+            className="mt-2 w-full h-32 object-cover "
+            style={{ objectFit: "cover", height: "150px", width: "100%" }}
+          />
+          <Card
+            title={<span className={styles.cardHeader}>Ürün Bilgileri</span>}
+            className={`${styles.shadow} ${styles.cardBody}`}
+          >
+            <p>
+              <Text strong>Ürün Adı:</Text> {message?.product.productName || "Ürün bulunamadı"}
+            </p>
+            <p>
+              <Text strong>Kategori:</Text> {message?.product.category.categoryName || "Kategori bulunamadı"}
+            </p>
+          </Card>
+        </Col>
+      </Row>
 
-      {/* Tarih Bilgileri Kartı */}
-      <Card className={`w-full mb-4 ${styles.cardBody}`}>
+      {/* Mesaj kartı */}
+      <Card className={`w-full mb-4 bg-green-300 ${styles.cardBody}`}>
+        <h3 className="text-xl mb-1 font-bold p-1"> Müşterinin Mesajı</h3>
+        <p>
+          <Text strong>Mesaj Başlığı:</Text> {message?.messageHeader}
+        </p>
+        <p>
+          <Text strong>Mesaj:</Text> {message?.messageText}
+        </p>
         <p>
           <Text strong>Oluşturulma Tarihi:</Text> {formatDate(message?.createdAt || "")}
         </p>
@@ -199,15 +204,6 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
         title={<span className={styles.cardHeader}>Dönüş Bilgileri</span>}
         className={`${styles.shadow} ${styles.cardBody}`}
       >
-        <Text strong>Admin Notu:</Text>
-        <TextArea
-          rows={4}
-          value={adminNote}
-          onChange={(e) => setAdminNote(e.target.value)}
-          placeholder="Notunuzu buraya ekleyin"
-          className="mt-2"
-        />
-
         <Checkbox
           checked={isReturn}
           onChange={(e) => setIsReturn(e.target.checked)}
@@ -224,6 +220,8 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
         >
           Güncelle
         </Button>
+
+        <AdminNotesComp messageId={messageId} />
       </Card>
     </div>
   );
