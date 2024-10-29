@@ -98,7 +98,7 @@ export default function Sidebar() {
               </li>
               <li className="py-2 flex items-center">
                 <SlEnvolopeLetter className="mr-2" />
-                <a href="/services">Mesajlarım</a>
+                <a href="/messages">Mesajlarım</a>
               </li>
               <li className="py-2 flex items-center">
                 <IoMdExit className="mr-2" />

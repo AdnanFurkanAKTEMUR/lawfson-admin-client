@@ -8,6 +8,7 @@ export const ADMIN_USER = gql`
       email
       role
       phone
+      isRoot
       createdAt
       updatedAt
     }
@@ -24,6 +25,7 @@ export const ADMIN_USER_LOGIN = gql`
         id
       }
       role
+      isRoot
       updatedAt
       userName
     }
@@ -37,6 +39,7 @@ export const ADMINUSERS_OF_COMPANY = gql`
       userName
       email
       role
+      isRoot
       phone
       createdAt
       updatedAt
@@ -51,6 +54,7 @@ export const ADMINUSER_UPDATE = gql`
       userName
       email
       role
+      isRoot
       phone
       createdAt
       updatedAt
