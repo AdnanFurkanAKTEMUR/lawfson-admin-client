@@ -1,24 +1,35 @@
 "use client";
 
-import { GETALL_CAT } from "@/apolloConfig/graphqlResolvers/categoryResolver";
+import { GETALL_CAT, GETCATEGORYLEAFS } from "@/apolloConfig/graphqlResolvers/categoryResolver";
 import { GET_PRODUCT, UPDATE_PRODUCT } from "@/apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
-import { Form, Input, Select, Button, message, Spin } from "antd";
+import { Form, Input, Select, Button, message, Spin, Row, Col, Checkbox } from "antd";
 import { useEffect } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
 
 type Category = {
   id: number;
-  categoryName: string;
+  fullPathName: string;
 };
 
 type Product = {
   id: number;
   productName: string;
-  category: {
+  category?: {
     id: number;
     categoryName: string;
   };
+  image?: string;
+  widths?: string;
+  length?: string;
+  thickness?: string;
+  color?: string;
+  origin?: string;
+  surfaceTreatment?: string;
+  description?: string;
+  onAd?: boolean;
+  location?: string;
+  brand?: string;
 };
 
 function ProductUpdateComp({ productId }: { productId: string }) {
@@ -34,7 +45,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
   });
 
   // Kategori listesini almak için query
-  const { data: cData, error: cError, loading: cLoading } = useQuery(GETALL_CAT);
+  const { data: cData, error: cError, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
 
   // Ürünü güncellemek için mutation
   const [updateProductMutation, { data: updateData, error: updateError, loading: updateLoading }] = useMutation(UPDATE_PRODUCT);
@@ -44,7 +55,18 @@ function ProductUpdateComp({ productId }: { productId: string }) {
     if (pData?.getProduct) {
       form.setFieldsValue({
         productName: pData.getProduct.productName,
-        categoryId: pData.getProduct.category.id,
+        categoryId: pData.getProduct?.category.id,
+        image: pData.getProduct?.image,
+        widths: pData.getProduct?.widths,
+        length: pData.getProduct?.length,
+        thickness: pData.getProduct?.thickness,
+        color: pData.getProduct?.color,
+        origin: pData.getProduct?.origin,
+        surfaceTreatment: pData.getProduct?.surfaceTreatment,
+        description: pData.getProduct?.description,
+        onAd: pData.getProduct?.onAd,
+        location: pData.getProduct?.location,
+        brand: pData.getProduct?.brand,
       });
     }
     if (pError) {
@@ -53,14 +75,13 @@ function ProductUpdateComp({ productId }: { productId: string }) {
   }, [pData, pError, form]);
 
   // Güncelleme formunun gönderilmesi
-  const onFinish = async (values: { productName: string; categoryId: number }) => {
+  const onFinish = async (values: any) => {
     try {
       await updateProductMutation({
         variables: {
           input: {
             id: parseInt(productId),
-            categoryId: values?.categoryId,
-            productName: values?.productName,
+            ...values,
           },
         },
       });
@@ -72,7 +93,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
 
   if (pLoading || cLoading) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center">
         <Spin
           indicator={
             <LoadingOutlined
@@ -98,30 +119,127 @@ function ProductUpdateComp({ productId }: { productId: string }) {
         layout="vertical"
         onFinish={onFinish}
       >
-        <Form.Item
-          label="Ürün Adı"
-          name="productName"
-          rules={[{ required: true, message: "Lütfen ürün adını giriniz" }]}
-        >
-          <Input placeholder="Ürün adı" />
-        </Form.Item>
+        <Row gutter={16}>
+          {/* Sol taraf */}
+          <Col
+            xs={24}
+            md={12}
+          >
+            <Form.Item
+              label="Ürün Adı"
+              name="productName"
+              rules={[{ required: true, message: "Lütfen ürün adını giriniz" }]}
+            >
+              <Input placeholder="Ürün adı" />
+            </Form.Item>
 
-        <Form.Item
-          label="Kategori"
-          name="categoryId"
-          rules={[{ required: true, message: "Lütfen bir kategori seçiniz" }]}
-        >
-          <Select placeholder="Kategori seç">
-            {cData?.categoryGetAll.map((category: Category) => (
-              <Select.Option
-                key={category.id}
-                value={category.id}
+            <Form.Item
+              label="Kategori"
+              name="categoryId"
+              rules={[{ required: true, message: "Lütfen kategori seçiniz" }]}
+            >
+              <Select
+                showSearch
+                placeholder="Kategori seç"
+                optionFilterProp="children"
+                filterOption={(input, option) => (option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())}
               >
-                {category.categoryName}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+                {cData?.categoryLeafs.map((cat: any) => (
+                  <Select.Option
+                    key={cat.id}
+                    value={cat.id}
+                  >
+                    {cat.fullPathName}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Marka"
+              name="brand"
+            >
+              <Input placeholder="Marka" />
+            </Form.Item>
+
+            <Form.Item
+              label="Genişlik"
+              name="widths"
+            >
+              <Input placeholder="Genişlik" />
+            </Form.Item>
+
+            <Form.Item
+              label="Uzunluk"
+              name="length"
+            >
+              <Input placeholder="Uzunluk" />
+            </Form.Item>
+
+            <Form.Item
+              label="Kalınlık"
+              name="thickness"
+            >
+              <Input placeholder="Kalınlık" />
+            </Form.Item>
+
+            <Form.Item
+              label="Renk"
+              name="color"
+            >
+              <Input placeholder="Renk" />
+            </Form.Item>
+          </Col>
+          {/* Sağ taraf */}
+          <Col
+            xs={24}
+            md={12}
+          >
+            <Form.Item
+              label="Menşei"
+              name="origin"
+            >
+              <Input placeholder="Menşei" />
+            </Form.Item>
+
+            <Form.Item
+              label="Yüzey İşlemi"
+              name="surfaceTreatment"
+            >
+              <Input placeholder="Yüzey İşlemi" />
+            </Form.Item>
+
+            <Form.Item
+              label="Açıklama"
+              name="description"
+            >
+              <Input.TextArea
+                rows={4}
+                placeholder="Açıklama"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="onAd"
+              valuePropName="checked"
+            >
+              <Checkbox>İlana Koy</Checkbox>
+            </Form.Item>
+
+            <Form.Item
+              label="Konum"
+              name="location"
+            >
+              <Input placeholder="Konum" />
+            </Form.Item>
+
+            <Form.Item
+              label="Görsel URL"
+              name="image"
+            >
+              <Input placeholder="Görsel URL" />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item>
           <Button

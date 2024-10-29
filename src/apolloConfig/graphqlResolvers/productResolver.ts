@@ -20,12 +20,24 @@ export const GET_PRODUCT = gql`
     getProduct(input: $input) {
       id
       productName
-      updatedAt
-      createdAt
+      brand
+      image
+      widths
+      length
+      thickness
+      color
+      origin
+      surfaceTreatment
+      description
+      onAd
+      location
+      adDate
       category {
         id
         categoryName
       }
+      createdAt
+      updatedAt
     }
   }
 `;

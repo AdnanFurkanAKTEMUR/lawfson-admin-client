@@ -20,23 +20,14 @@ type product = {
   description?: string;
   onAd?: boolean;
   location?: string;
+  brand?: string;
 };
 
 function ProductCreateComp() {
   const [form] = Form.useForm();
-  const [categories, setCategories] = useState<{ id: number; fullPathName: string }[]>([]);
 
   const { data: cData, error: cError, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
   const [createProductMutate, { data: cpData, error: cpError, loading: cpLoading }] = useMutation(CREATE_PRODUCT);
-
-  useEffect(() => {
-    if (cData && cData.categoryLeafs) {
-      setCategories(cData.categoryLeafs);
-    }
-    if (cError) {
-      message.error("Kategoriler yüklenirken bir hata oluştu.");
-    }
-  }, [cData, cError]);
 
   const onFinish = async (values: product) => {
     try {
@@ -53,7 +44,7 @@ function ProductCreateComp() {
       <h1 className="text-3xl font-semibold mb-6">Ürün Oluşturma Formu</h1>
 
       {cLoading ? (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center">
           <Spin
             indicator={
               <LoadingOutlined
@@ -95,7 +86,7 @@ function ProductCreateComp() {
                   optionFilterProp="children"
                   filterOption={(input, option) => (option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())}
                 >
-                  {categories.map((cat) => (
+                  {cData?.categoryLeafs.map((cat: any) => (
                     <Select.Option
                       key={cat.id}
                       value={cat.id}
@@ -104,6 +95,12 @@ function ProductCreateComp() {
                     </Select.Option>
                   ))}
                 </Select>
+              </Form.Item>
+              <Form.Item
+                label="Marka"
+                name="brand"
+              >
+                <Input placeholder="Marka" />
               </Form.Item>
 
               <Form.Item
