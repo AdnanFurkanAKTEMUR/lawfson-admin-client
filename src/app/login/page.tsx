@@ -21,11 +21,12 @@ export default function Login() {
           email: data.adminUserLogin.email,
           role: data.adminUserLogin.role,
           companyId: data.adminUserLogin.company.id,
-          company: data.adminUserLogin.company,
+          companyName: data.adminUserLogin.company.companyName,
           createdAt: data.adminUserLogin.createdAt,
           updatedAt: data.adminUserLogin.updatedAt,
         });
-        router.push("/");
+        console.log(data);
+        //router.push("/");
         if (res?.error) {
           notification.error({
             message: "NextAuth Giriş Başarısız",

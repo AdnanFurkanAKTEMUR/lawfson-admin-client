@@ -23,6 +23,7 @@ export const ADMIN_USER_LOGIN = gql`
       createdAt
       company {
         id
+        companyName
       }
       role
       isRoot

@@ -1,5 +1,4 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import argon2 from "argon2";
 import NextAuth from "next-auth/next";
 // import dotenv from "dotenv";
 // dotenv.config();
@@ -16,18 +15,18 @@ const handler = NextAuth({
       credentials: {},
       //@ts-ignore
       async authorize(credantials, req) {
-        const { id, userName, email, role, company, companyId, createdAt, updatedAt } = credantials as {
+        const { id, userName, email, role, companyName, companyId, createdAt, updatedAt } = credantials as {
           id: number;
           userName: string;
           email: string;
           role: string;
-          company: any;
+          companyName: string;
           companyId: number;
           createdAt: string;
           updatedAt: string;
         };
-        console.log(companyId, company);
-        return { id, userName, email, company, companyId, role, createdAt, updatedAt };
+        console.log(companyName, "route");
+        return { id, userName, email, companyName, companyId, role, createdAt, updatedAt };
       },
     }),
   ],
@@ -46,7 +45,7 @@ const handler = NextAuth({
         token.userName = user.userName;
         token.role = user.role;
         token.email = user.email;
-        token.company = user.company;
+        token.companyName = user.companyName;
         token.companyId = user.companyId;
         token.updatedAt = user.updatedAt;
         token.createdAt = user.createdAt;
@@ -59,7 +58,7 @@ const handler = NextAuth({
         session.user.userName = token.userName;
         session.user.role = token.role;
         session.user.email = token.email;
-        session.user.company = token.company;
+        session.user.companyName = token.companyName;
         session.user.companyId = token.companyId;
         session.user.updatedAt = token.updatedAt;
         session.user.createdAt = token.createdAt;
