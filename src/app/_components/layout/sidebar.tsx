@@ -101,6 +101,10 @@ export default function Sidebar() {
                 <a href="/messages">Mesajlarım</a>
               </li>
               <li className="py-2 flex items-center">
+                <IoBusiness className="mr-2" />
+                <a href="/adminlogs">Kullanıcı Logları</a>
+              </li>
+              <li className="py-2 flex items-center">
                 <IoMdExit className="mr-2" />
                 <button onClick={() => signOut()}>Çıkış Yap</button>
               </li>
