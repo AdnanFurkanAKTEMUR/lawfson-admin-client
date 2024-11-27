@@ -106,7 +106,7 @@ export default function Sidebar() {
               </li>
               <li className="py-2 flex items-center">
                 <IoMdExit className="mr-2" />
-                <button onClick={() => signOut()}>Çıkış Yap</button>
+                <button onClick={async () => await signOut()}>Çıkış Yap</button>
               </li>
             </ul>
           </div>
