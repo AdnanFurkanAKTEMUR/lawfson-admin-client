@@ -6,7 +6,15 @@ import NextAuth from "next-auth/next";
 const handler = NextAuth({
   session: {
     strategy: "jwt",
-    maxAge: 2 * 60 * 60, // 30 gün
+    maxAge: 2 * 60 * 60,
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        secure: process.env.NODE_ENV === "production", // Prod ortamında true, dev ortamında false
+      },
+    },
   },
 
   providers: [
