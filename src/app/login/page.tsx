@@ -26,7 +26,9 @@ export default function Login() {
           updatedAt: data.adminUserLogin.updatedAt,
         });
         console.log(data);
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
         if (res?.error) {
           notification.error({
             message: "NextAuth Giriş Başarısız",
