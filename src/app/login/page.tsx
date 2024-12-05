@@ -11,8 +11,20 @@ export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN, {
-    onCompleted: async (data) => {
+  const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
+  const onFinish = async (formValues: any) => {
+    try {
+      const { data } = await loginMutation({
+        variables: {
+          input: {
+            email: formValues.email,
+            password: formValues.password,
+          },
+        },
+      });
+      console.log(data, "data");
+      console.log(loginLoading);
+      // GraphQL'den gelen veri
       if (data && data.adminUserLogin) {
         const res = await signIn("credentials", {
           redirect: false,
@@ -25,10 +37,7 @@ export default function Login() {
           createdAt: data.adminUserLogin.createdAt,
           updatedAt: data.adminUserLogin.updatedAt,
         });
-        console.log(data);
-        setTimeout(() => {
-          router.push("/");
-        }, 2000);
+
         if (res?.error) {
           notification.error({
             message: "NextAuth Giriş Başarısız",
@@ -39,30 +48,17 @@ export default function Login() {
             message: "Giriş Başarılı",
             description: "Başarıyla giriş yaptınız!",
           });
+          setTimeout(() => {
+            router.push("/");
+          }, 2000);
         }
       }
-    },
-    onError: (error) => {
+    } catch (error) {
+      console.log(loginError);
       notification.error({
         message: "Backend Giriş Başarısız",
-        description: error.message,
+        description: "Bilinmeyen bir hata oluştu",
       });
-    },
-  });
-
-  const onFinish = async (values: { email: string; password: string }) => {
-    setLoading(true);
-    try {
-      await loginMutation({
-        variables: {
-          input: {
-            email: values.email,
-            password: values.password,
-          },
-        },
-      });
-    } catch (err) {
-      console.error("Apollo Mutation Error:", err);
     } finally {
       setLoading(false);
     }

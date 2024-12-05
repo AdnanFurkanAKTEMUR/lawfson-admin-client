@@ -25,6 +25,8 @@ const handler = NextAuth({
           createdAt: string;
           updatedAt: string;
         };
+        console.log(companyId, "companyId authorize");
+
         return { id, userName, email, companyName, companyId, role, createdAt, updatedAt };
       },
     }),
