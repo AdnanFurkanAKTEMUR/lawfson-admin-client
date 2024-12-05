@@ -1,12 +1,10 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
-// import dotenv from "dotenv";
-// dotenv.config();
 
 const handler = NextAuth({
   session: {
-    strategy: "jwt",
-    maxAge: 2 * 60 * 60,
+    strategy: "jwt", // Session'ı JWT ile yönetin
+    maxAge: 2 * 60 * 60, // 2 saatlik session süresi
   },
 
   providers: [
@@ -14,8 +12,8 @@ const handler = NextAuth({
       type: "credentials",
       credentials: {},
       //@ts-ignore
-      async authorize(credantials, req) {
-        const { id, userName, email, role, companyName, companyId, createdAt, updatedAt } = credantials as {
+      async authorize(credentials, req) {
+        const { id, userName, email, role, companyName, companyId, createdAt, updatedAt } = credentials as {
           id: number;
           userName: string;
           email: string;
@@ -25,20 +23,28 @@ const handler = NextAuth({
           createdAt: string;
           updatedAt: string;
         };
-        return { id, userName, email, companyName, companyId, role, createdAt, updatedAt };
+
+        // Kullanıcı bilgileri doğruysa döndür
+        return {
+          id,
+          userName,
+          email,
+          companyName,
+          companyId,
+          role,
+          createdAt,
+          updatedAt,
+        };
       },
     }),
   ],
+
   pages: {
-    signIn: "/login",
+    signIn: "/login", // Giriş yapma sayfası
   },
+
   callbacks: {
-    async jwt({ token, user, session, trigger }: any) {
-      // if (trigger == "update" && session) {
-      //   token.name = session.name;
-      //   token.email = session.email;
-      //   token.role = session.role;
-      // }
+    async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
         token.userName = user.userName;
@@ -51,6 +57,7 @@ const handler = NextAuth({
       }
       return token;
     },
+
     session({ session, token }: any) {
       if (token && session.user) {
         session.user.id = token.id;
@@ -66,6 +73,20 @@ const handler = NextAuth({
       return session;
     },
   },
+
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true, // Sadece HTTP üzerinden erişilebilir
+        secure: process.env.NODE_ENV === "production", // Prod ortamında secure aktif
+        sameSite: "lax", // Cross-origin istekler için lax davranışı
+        path: "/", // Cookie tüm site için geçerli
+      },
+    },
+  },
+
+  debug: true, // Debug modu açık
 });
 
 export { handler as GET, handler as POST };
