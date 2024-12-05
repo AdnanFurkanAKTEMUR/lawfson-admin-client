@@ -88,21 +88,8 @@ const handler = NextAuth({
         session.user.companyId = token.companyId;
         session.user.updatedAt = token.updatedAt;
         session.user.createdAt = token.createdAt;
-        session.accessToken = token;
       }
       return session;
-    },
-  },
-
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token",
-      options: {
-        httpOnly: true, // Sadece HTTP üzerinden erişilebilir
-        secure: process.env.NODE_ENV === "production", // Prod ortamında secure aktif
-        sameSite: "lax", // Cross-origin istekler için lax davranışı
-        path: "/", // Cookie tüm site için geçerli
-      },
     },
   },
 });

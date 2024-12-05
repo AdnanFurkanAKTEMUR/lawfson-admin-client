@@ -15,11 +15,13 @@ export default function Login() {
 
   const onFinish = async (values: any) => {
     await signIn("credentials", {
-      redirect: true,
+      redirect: false,
       email: values.email,
       password: values.password,
-      callbackUrl: "/",
     });
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
   };
   // const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
 
