@@ -2,7 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
 import { GraphQLClient, gql } from "graphql-request";
 
-const graphqlClient = new GraphQLClient("http://localhost:2000/");
+const graphqlClient = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_URI || "");
 
 const LOGIN_MUTATION = gql`
   mutation AdminUserLogin($input: adminUserLoginInput) {
