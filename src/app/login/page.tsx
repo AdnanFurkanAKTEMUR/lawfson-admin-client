@@ -29,7 +29,9 @@ export default function Login() {
           message: "Başarılı Giriş",
           description: "Başarıyla giriş yaptınız!",
         });
-        router.push("/"); // Ana sayfaya yönlendirme
+        setTimeout(() => {
+          router.push("/");
+        }, 500);
       }
     } catch (error) {
       console.error("Login Error:", error);
