@@ -10,7 +10,6 @@ const handler = NextAuth({
   providers: [
     CredentialsProvider({
       type: "credentials",
-      credentials: {},
       //@ts-ignore
       async authorize(credentials, req) {
         const { email, password } = credentials as {
@@ -90,6 +89,20 @@ const handler = NextAuth({
         session.user.createdAt = token.createdAt;
       }
       return session;
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production", // Prod'da secure, dev'de normal
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".adnanfurkanaktemur.com.tr" // Prod domain
+            : "localhost", // Dev ortamında localhost
+      },
     },
   },
 });
