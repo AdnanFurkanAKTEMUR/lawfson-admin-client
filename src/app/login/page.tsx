@@ -30,7 +30,7 @@ export default function Login() {
             email: values.data.adminUserLogin.email,
             role: values.data.adminUserLogin.role,
             companyName: values.data.adminUserLogin.company.companyName,
-            companyId: values.data.adminUserLogin.company.companyId,
+            companyId: values.data.adminUserLogin.company.id,
             isRoot: values.data.adminUserLogin.isRoot,
             createdAt: values.data.adminUserLogin.createdAt,
             updatedAt: values.data.adminUserLogin.updatedAt,
