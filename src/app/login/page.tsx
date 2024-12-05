@@ -1,63 +1,41 @@
 "use client";
 
-import { useMutation } from "@apollo/client";
 import { signIn } from "next-auth/react";
 import { Form, Input, Button, notification } from "antd";
 import { useState } from "react";
-import { ADMIN_USER_LOGIN } from "@/apolloConfig/graphqlResolvers/adminUserResolver";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
-  const onFinish = async (formValues: any) => {
-    try {
-      const { data } = await loginMutation({
-        variables: {
-          input: {
-            email: formValues.email,
-            password: formValues.password,
-          },
-        },
-      });
-      console.log(data, "data");
-      console.log(loginLoading);
-      // GraphQL'den gelen veri
-      if (data && data.adminUserLogin) {
-        const res = await signIn("credentials", {
-          redirect: false,
-          id: data.adminUserLogin.id,
-          userName: data.adminUserLogin.userName,
-          email: data.adminUserLogin.email,
-          role: data.adminUserLogin.role,
-          companyId: data.adminUserLogin.company.id,
-          companyName: data.adminUserLogin.company.companyName,
-          createdAt: data.adminUserLogin.createdAt,
-          updatedAt: data.adminUserLogin.updatedAt,
-        });
 
-        if (res?.error) {
-          notification.error({
-            message: "NextAuth Giriş Başarısız",
-            description: res.error,
-          });
-        } else {
-          notification.success({
-            message: "Giriş Başarılı",
-            description: "Başarıyla giriş yaptınız!",
-          });
-          setTimeout(() => {
-            router.push("/");
-          }, 2000);
-        }
+  const onFinish = async (formValues: any) => {
+    setLoading(true);
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formValues.email,
+        password: formValues.password,
+      });
+
+      if (res?.error) {
+        notification.error({
+          message: "Giriş Başarısız",
+          description: res.error || "Kimlik doğrulama hatası.",
+        });
+      } else {
+        notification.success({
+          message: "Başarılı Giriş",
+          description: "Başarıyla giriş yaptınız!",
+        });
+        router.push("/"); // Ana sayfaya yönlendirme
       }
     } catch (error) {
-      console.log(loginError);
+      console.error("Login Error:", error);
       notification.error({
-        message: "Backend Giriş Başarısız",
-        description: "Bilinmeyen bir hata oluştu",
+        message: "Hata Oluştu",
+        description: "Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.",
       });
     } finally {
       setLoading(false);
@@ -78,17 +56,17 @@ export default function Login() {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Email alanı zorunludur" },
-              { type: "email", message: "Geçerli bir email giriniz" },
+              { required: true, message: "Lütfen email giriniz!" },
+              { type: "email", message: "Geçerli bir email adresi giriniz." },
             ]}
           >
             <Input placeholder="Email" />
           </Form.Item>
 
           <Form.Item
-            label="Password"
+            label="Şifre"
             name="password"
-            rules={[{ required: true, message: "Şifre alanı zorunludur" }]}
+            rules={[{ required: true, message: "Lütfen şifre giriniz!" }]}
           >
             <Input.Password placeholder="Şifre" />
           </Form.Item>
@@ -97,7 +75,7 @@ export default function Login() {
             <Button
               type="primary"
               htmlType="submit"
-              loading={loading || loginLoading}
+              loading={loading}
               className="w-full"
             >
               Giriş Yap

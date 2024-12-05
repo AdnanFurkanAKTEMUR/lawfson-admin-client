@@ -16,6 +16,7 @@
     "ag-grid-react": "^32.2.2",
     "antd": "^5.20.3",
     "argon2": "^0.41.0",
+    "graphql-request": "^7.1.2",
     "next": "14.2.6",
     "next-auth": "^4.24.7",
     "pg": "^8.13.1",
