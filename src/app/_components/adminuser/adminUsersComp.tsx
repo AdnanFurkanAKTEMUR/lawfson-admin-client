@@ -1,6 +1,6 @@
 "use client";
 
-import { ADMINUSER_DELETE, ADMINUSERS_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/adminUserResolver";
+import { ADMINUSER_DELETE, ADMINUSERS_OF_COMPANY } from "@/app/_apolloConfig/graphqlResolvers/adminUserResolver";
 import formatDate from "@/helpers/formatDate";
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Input, notification, Popconfirm, Space, Spin } from "antd";

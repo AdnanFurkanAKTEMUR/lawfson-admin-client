@@ -1,6 +1,6 @@
 "use client";
-import { GETALL_CAT, GETCATEGORYLEAFS } from "@/apolloConfig/graphqlResolvers/categoryResolver";
-import { CREATE_PRODUCT } from "@/apolloConfig/graphqlResolvers/productResolver";
+import { GETALL_CAT, GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
+import { CREATE_PRODUCT } from "@/app/_apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
 import { Form, Input, Button, Select, Checkbox, message, Row, Col } from "antd";
 import { useEffect, useState } from "react";

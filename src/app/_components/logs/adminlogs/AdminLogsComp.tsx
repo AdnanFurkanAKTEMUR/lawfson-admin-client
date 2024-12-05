@@ -1,4 +1,4 @@
-import { GET_LOGS } from "@/apolloConfig/graphqlResolvers/adminLogsResolver";
+import { GET_LOGS } from "@/app/_apolloConfig/graphqlResolvers/adminLogsResolver";
 import { useQuery } from "@apollo/client";
 import { Spin, Alert } from "antd";
 

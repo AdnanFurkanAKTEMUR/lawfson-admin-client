@@ -1,46 +1,54 @@
 "use client";
 
+import { useMutation } from "@apollo/client";
 import { signIn } from "next-auth/react";
 import { Form, Input, Button, notification } from "antd";
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
+import { ADMIN_USER_LOGIN } from "../_apolloConfig/graphqlResolvers/adminUserResolver";
 
 export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
 
-  const onFinish = async (formValues: any) => {
-    setLoading(true);
+  const onFinish = async (values: any) => {
+    console.log(values);
     try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: formValues.email,
-        password: formValues.password,
-      });
-
-      if (res?.error) {
-        notification.error({
-          message: "Giriş Başarısız",
-          description: res.error || "Kimlik doğrulama hatası.",
+      loginMutation({ variables: { input: values } })
+        .then(async (values: any) => {
+          notification.success({
+            message: "Başarılı",
+            description: "Giriş Başarılı!. Ana Sayfaya yönlendiriliyorsunuz!",
+          });
+          console.log(values.data);
+          await signIn("credentials", {
+            id: values.data.adminUserLogin.id,
+            userName: values.data.adminUserLogin.userName,
+            email: values.data.adminUserLogin.email,
+            role: values.data.adminUserLogin.role,
+            companyName: values.data.adminUserLogin.company.companyName,
+            companyId: values.data.adminUserLogin.company.companyId,
+            isRoot: values.data.adminUserLogin.isRoot,
+            createdAt: values.data.adminUserLogin.createdAt,
+            updatedAt: values.data.adminUserLogin.updatedAt,
+            redirect: false,
+          });
+          setTimeout(() => {
+            router.push("/");
+          }, 1000);
+        })
+        .catch((e) => {
+          console.error("Giriş yapma hatası:", e);
+          notification.error({
+            message: "Hata",
+            description: "Giriş yapma hatası.",
+          });
         });
-      } else {
-        notification.success({
-          message: "Başarılı Giriş",
-          description: "Başarıyla giriş yaptınız!",
-        });
-        setTimeout(() => {
-          router.push("/");
-        }, 500);
-      }
-    } catch (error) {
-      console.error("Login Error:", error);
-      notification.error({
-        message: "Hata Oluştu",
-        description: "Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.",
-      });
-    } finally {
-      setLoading(false);
+    } catch (e) {
+      console.error("Login Error:", e);
     }
   };
 
@@ -58,17 +66,17 @@ export default function Login() {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Lütfen email giriniz!" },
-              { type: "email", message: "Geçerli bir email adresi giriniz." },
+              { required: true, message: "Email alanı zorunludur" },
+              { type: "email", message: "Geçerli bir email giriniz" },
             ]}
           >
             <Input placeholder="Email" />
           </Form.Item>
 
           <Form.Item
-            label="Şifre"
+            label="Password"
             name="password"
-            rules={[{ required: true, message: "Lütfen şifre giriniz!" }]}
+            rules={[{ required: true, message: "Şifre alanı zorunludur" }]}
           >
             <Input.Password placeholder="Şifre" />
           </Form.Item>
@@ -77,7 +85,7 @@ export default function Login() {
             <Button
               type="primary"
               htmlType="submit"
-              loading={loading}
+              loading={loading || loginLoading}
               className="w-full"
             >
               Giriş Yap

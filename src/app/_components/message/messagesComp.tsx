@@ -1,6 +1,6 @@
 "use client";
 
-import { MESSAGES_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/messageResolver";
+import { MESSAGES_OF_COMPANY } from "@/app/_apolloConfig/graphqlResolvers/messageResolver";
 import { useQuery } from "@apollo/client";
 import { Table, Input, Button, Tag, Space, Radio } from "antd";
 import { useState } from "react";

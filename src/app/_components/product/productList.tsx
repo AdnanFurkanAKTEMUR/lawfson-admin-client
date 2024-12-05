@@ -1,5 +1,5 @@
 "use client";
-import { DELETE_PRODUCT, PRODUCT_OF_COMPANY } from "@/apolloConfig/graphqlResolvers/productResolver";
+import { DELETE_PRODUCT, PRODUCT_OF_COMPANY } from "@/app/_apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { Table, Input, Button, Space, Popconfirm, Spin, notification } from "antd";

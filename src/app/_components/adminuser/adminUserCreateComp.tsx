@@ -1,6 +1,6 @@
 "use client";
 
-import { ADMINUSER_CREATE } from "@/apolloConfig/graphqlResolvers/adminUserResolver";
+import { ADMINUSER_CREATE } from "@/app/_apolloConfig/graphqlResolvers/adminUserResolver";
 import { useMutation } from "@apollo/client";
 import { Button, Form, Input, message, Select } from "antd";
 import { useRouter } from "next/navigation";

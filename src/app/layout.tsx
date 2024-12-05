@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ApolloWrapper } from "@/apolloConfig/apolloClientWrapper";
-import { NextAuthProvider } from "@/nextAuthProvider/NextAuthProvider";
+import { ApolloWrapper } from "@/app/_apolloConfig/apolloClientWrapper";
+import { NextAuthProvider } from "@/app/_nextAuthProvider/NextAuthProvider";
 import Sidebar from "./_components/layout/sidebar";
 import Navbar from "./_components/layout/navbar";
 

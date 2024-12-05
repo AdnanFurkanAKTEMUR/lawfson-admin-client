@@ -1,6 +1,6 @@
 "use client";
 
-import { SAY_HELLO } from "@/apolloConfig/graphqlResolvers/helloResolver";
+import { SAY_HELLO } from "@/app/_apolloConfig/graphqlResolvers/helloResolver";
 import { useQuery } from "@apollo/client";
 import SayHello from "./_components/SayHello";
 import { signOut, useSession } from "next-auth/react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ADMIN_USER, ADMINUSER_UPDATE } from "@/apolloConfig/graphqlResolvers/adminUserResolver";
+import { ADMIN_USER, ADMINUSER_UPDATE } from "@/app/_apolloConfig/graphqlResolvers/adminUserResolver";
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Form, Input, message, Select, Spin } from "antd";
 import { useEffect } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { MESSAGE, UPDATE_MESSAGE } from "@/apolloConfig/graphqlResolvers/messageResolver";
+import { MESSAGE, UPDATE_MESSAGE } from "@/app/_apolloConfig/graphqlResolvers/messageResolver";
 import { useMutation, useQuery } from "@apollo/client";
 import { Card, Input, Checkbox, Button, Typography, Row, Col, notification } from "antd";
 import { useState, useEffect } from "react";

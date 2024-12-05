@@ -1,6 +1,6 @@
 "use client";
 
-import { ADMINNOTE_CREATE, ADMINNOTE_DELETE, ADMINNOTE_OF_MESSAGE } from "@/apolloConfig/graphqlResolvers/adminNoteResolver";
+import { ADMINNOTE_CREATE, ADMINNOTE_DELETE, ADMINNOTE_OF_MESSAGE } from "@/app/_apolloConfig/graphqlResolvers/adminNoteResolver";
 import { useMutation, useQuery } from "@apollo/client";
 import { Card, Avatar, Button, Input, Typography, notification } from "antd";
 import { useState } from "react";
