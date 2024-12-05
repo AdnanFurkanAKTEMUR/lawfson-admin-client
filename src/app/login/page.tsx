@@ -12,9 +12,18 @@ export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
 
   const onFinish = async (values: any) => {
+    await signIn("credentials", {
+      redirect: true,
+      email: values.email,
+      password: values.password,
+      callbackUrl: "/",
+    });
+  };
+  // const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
+
+  /* const onFinish2 = async (values: any) => {
     console.log(values);
     try {
       loginMutation({ variables: { input: values } })
@@ -51,7 +60,7 @@ export default function Login() {
       console.error("Login Error:", e);
     }
   };
-
+ */
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
@@ -85,7 +94,7 @@ export default function Login() {
             <Button
               type="primary"
               htmlType="submit"
-              loading={loading || loginLoading}
+              //  loading={loading || loginLoading}
               className="w-full"
             >
               Giriş Yap

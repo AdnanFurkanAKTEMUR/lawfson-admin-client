@@ -1,11 +1,11 @@
 import { DefaultSession, DefaultUser } from "next-auth";
 interface IUser extends DefaultUser {
-  id: number;
+  id: string;
   userName: string;
   email: string;
   role: string;
   companyId: number;
-  company: any;
+  companyName: string;
   createdAt: string;
   updatedAt: string;
 }
