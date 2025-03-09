@@ -47,3 +47,27 @@ export const GET_JOBORDER = gql`
     }
   }
 `;
+
+export const UPDATE_JOBORDER = gql`
+  mutation UpdateJobOrder($input: updateJobOrderInput) {
+    updateJobOrder(input: $input) {
+      id
+      note
+      adminUser {
+        id
+        userName
+      }
+      createdAdminUser {
+        id
+        userName
+      }
+      company {
+        id
+        companyName
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
