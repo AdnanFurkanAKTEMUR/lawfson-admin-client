@@ -94,7 +94,7 @@ function MessagesComp() {
       key: "action",
       render: (_, record) => (
         <Link
-          href={`/messageupdate/${record.id}`}
+          href={`/offerupdate/${record.id}`}
           className="text-white bg-blue-500 p-1 rounded-md"
         >
           Düzenle
@@ -105,7 +105,7 @@ function MessagesComp() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Mesajlar</h2>
+      <h2 className="text-xl font-semibold mb-4">Teklifler</h2>
 
       <Space
         direction="vertical"
