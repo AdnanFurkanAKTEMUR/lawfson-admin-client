@@ -24,6 +24,48 @@ export const MESSAGES_OF_COMPANY = gql`
   }
 `;
 
+export const LASTFIVEMESSAGE = gql`
+  query LatestMessagesByReturnStatus {
+    latestMessagesByReturnStatus {
+      returnedMessages {
+        id
+      }
+      notReturnedMessages {
+        id
+        messageHeader
+        messageText
+        phone
+        isReturn
+        returnedAdmin {
+          id
+          userName
+        }
+        appUser {
+          id
+          userName
+        }
+        company {
+          id
+          companyName
+        }
+        product {
+          id
+          productName
+          image
+          onAd
+          inStock
+          category {
+            id
+            categoryName
+            fullPathName
+          }
+          clickedRate
+        }
+      }
+    }
+  }
+`;
+
 export const MESSAGES_COUNT = gql`
   query MessageCounts {
     messageCounts {
