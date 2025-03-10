@@ -67,7 +67,7 @@ const MostClickedProductComp: React.FC = () => {
                 <Link href={`productupdate/${product.id}`}>
                   <Image
                     alt={product.productName}
-                    src={product.image || "https://via.placeholder.com/300"}
+                    src={product.image || "/noimage.jpg"}
                     className="max-h-48 w-full object-cover" // 📌 Maksimum 48 birim yükseklik, genişlik sınırlı
                     preview={false}
                   />

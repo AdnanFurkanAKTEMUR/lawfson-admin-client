@@ -29,6 +29,18 @@ export const LASTFIVEMESSAGE = gql`
     latestMessagesByReturnStatus {
       returnedMessages {
         id
+        messageHeader
+        messageText
+        phone
+        isReturn
+        returnedAdmin {
+          id
+          userName
+        }
+        appUser {
+          id
+          userName
+        }
       }
       notReturnedMessages {
         id
