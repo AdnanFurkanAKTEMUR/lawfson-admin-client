@@ -24,6 +24,16 @@ export const MESSAGES_OF_COMPANY = gql`
   }
 `;
 
+export const MESSAGES_COUNT = gql`
+  query MessageCounts {
+    messageCounts {
+      dailyCount
+      weeklyCount
+      monthlyCount
+    }
+  }
+`;
+
 export const MESSAGE = gql`
   query MessageGet($input: getWithId) {
     messageGet(input: $input) {

@@ -54,7 +54,7 @@ const MostClickedProductComp: React.FC = () => {
   const products: ProductMostClicked[] = data?.productMostClickedThree || [];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white">
       <h2 className="text-2xl font-bold text-center mb-6">En Çok Tıklanan Ürünler</h2>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
         {products.map((product) => (
