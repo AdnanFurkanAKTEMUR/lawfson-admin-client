@@ -50,9 +50,10 @@ function ProductListComp() {
         refetchProducts();
       })
       .catch((e) => {
+        console.log(e);
         notification.error({
           message: "Hata!",
-          description: "Ürün silinirken bir hata meydana geldi!",
+          description: "Ürün silinirken bir hata meydana geldi! Görüşmede olan bir ürün silinemez!",
         });
       });
   };
