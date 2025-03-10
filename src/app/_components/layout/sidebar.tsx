@@ -5,6 +5,7 @@ import { BiChevronDown } from "react-icons/bi"; // Chevron icon for dropdown
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { IoBusiness } from "react-icons/io5";
 import { IoMdExit } from "react-icons/io";
+import { AiFillContainer } from "react-icons/ai";
 import { signOut } from "next-auth/react";
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false); // Sidebar state
@@ -43,12 +44,12 @@ export default function Sidebar() {
             <ul className="mt-4">
               <li className="py-2 flex items-center">
                 <AiOutlineHome className="mr-2" />
-                <a href="/">Dashboard</a>
+                <a href="/">Ana Sayfa</a>
               </li>
-              <li className="py-2 flex items-center">
+              {/* <li className="py-2 flex items-center">
                 <IoBusiness className="mr-2" />
                 <a href="/about">Şirketim</a>
-              </li>
+              </li> */}
               {/* Ürünler Açılır Menü */}
               <li className="py-2">
                 <div
@@ -99,6 +100,10 @@ export default function Sidebar() {
               <li className="py-2 flex items-center">
                 <SlEnvolopeLetter className="mr-2" />
                 <a href="/offers">Görüşmeler</a>
+              </li>
+              <li className="py-2 flex items-center">
+                <AiFillContainer className="mr-2" />
+                <a href="/joborders">İş Emirleri</a>
               </li>
               <li className="py-2 flex items-center">
                 <IoBusiness className="mr-2" />

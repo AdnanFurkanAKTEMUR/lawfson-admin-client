@@ -1,6 +1,11 @@
 import React from "react";
+import Dashboard from "./dashboard/DashboardComp";
 
 const SayHello: React.FC = () => {
-  return <div>say hello comp</div>;
+  return (
+    <>
+      <Dashboard />
+    </>
+  );
 };
 export default SayHello;

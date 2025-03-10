@@ -1,5 +1,38 @@
 import { gql } from "@apollo/client";
 
+export const MOSTCLICKEDTHREEPRODUCT = gql`
+  query ProductMostClickedThree {
+    productMostClickedThree {
+      id
+      productName
+      brand
+      image
+      widths
+      length
+      thickness
+      color
+      origin
+      surfaceTreatment
+      description
+      onAd
+      location
+      adDate
+      category {
+        id
+        categoryName
+      }
+      company {
+        id
+        companyName
+      }
+      clickedRate
+      inStock
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const PRODUCT_OF_COMPANY = gql`
   query ProductsOfCompany {
     productsOfCompany {
