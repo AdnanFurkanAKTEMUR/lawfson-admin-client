@@ -158,7 +158,7 @@ function ProductListComp() {
       </div>
     );
   }
-
+  console.log(filteredData);
   return (
     <div className="p-4">
       <Table

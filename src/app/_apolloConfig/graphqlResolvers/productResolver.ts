@@ -42,6 +42,7 @@ export const PRODUCT_OF_COMPANY = gql`
         id
         categoryName
       }
+      image
       createdAt
       updatedAt
     }

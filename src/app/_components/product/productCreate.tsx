@@ -1,13 +1,15 @@
 "use client";
-import { GETALL_CAT, GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
+import { GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
 import { CREATE_PRODUCT } from "@/app/_apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
-import { Form, Input, Button, Select, Checkbox, message, Row, Col } from "antd";
-import { useEffect, useState } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Select, Checkbox, message, Row, Col, Upload } from "antd";
+import { useState } from "react";
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
-type product = {
+const UPLOAD_URL = "https://www.adnanfurkanaktemur.com.tr/upload/";
+
+type Product = {
   productName: string;
   categoryId: number;
   image?: string;
@@ -25,15 +27,41 @@ type product = {
 
 function ProductCreateComp() {
   const [form] = Form.useForm();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const { data: cData, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
+  const [createProductMutate, { loading: cpLoading }] = useMutation(CREATE_PRODUCT);
+  const [uploading, setUploading] = useState(false);
 
-  const { data: cData, error: cError, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
-  const [createProductMutate, { data: cpData, error: cpError, loading: cpLoading }] = useMutation(CREATE_PRODUCT);
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
 
-  const onFinish = async (values: product) => {
     try {
-      await createProductMutate({ variables: { input: values } });
+      const response = await fetch(UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setImageUrl(result.url);
+        message.success("Resim başarıyla yüklendi!");
+      } else {
+        message.error(result.error || "Resim yüklenirken hata oluştu.");
+      }
+    } catch (error) {
+      message.error("Bağlantı hatası, tekrar deneyin.");
+    }
+    setUploading(false);
+  };
+
+  const onFinish = async (values: Product) => {
+    try {
+      await createProductMutate({ variables: { input: { ...values, image: imageUrl } } });
       message.success("Ürün başarıyla oluşturuldu!");
       form.resetFields();
+      setImageUrl(null);
     } catch (error) {
       message.error("Ürün oluşturulurken bir hata oluştu.");
     }
@@ -62,7 +90,6 @@ function ProductCreateComp() {
           className="space-y-4"
         >
           <Row gutter={16}>
-            {/* Sol taraf */}
             <Col
               xs={24}
               md={12}
@@ -83,8 +110,6 @@ function ProductCreateComp() {
                 <Select
                   showSearch
                   placeholder="Kategori seç"
-                  optionFilterProp="children"
-                  filterOption={(input, option) => (option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())}
                 >
                   {cData?.categoryLeafs.map((cat: any) => (
                     <Select.Option
@@ -96,6 +121,7 @@ function ProductCreateComp() {
                   ))}
                 </Select>
               </Form.Item>
+
               <Form.Item
                 label="Marka"
                 name="brand"
@@ -132,7 +158,6 @@ function ProductCreateComp() {
               </Form.Item>
             </Col>
 
-            {/* Sağ taraf */}
             <Col
               xs={24}
               md={12}
@@ -175,11 +200,28 @@ function ProductCreateComp() {
                 <Input placeholder="Konum" />
               </Form.Item>
 
-              <Form.Item
-                label="Görsel URL"
-                name="image"
-              >
-                <Input placeholder="Görsel URL" />
+              <Form.Item label="Resim Yükle">
+                <Upload
+                  beforeUpload={(file) => {
+                    handleUpload(file);
+                    return false;
+                  }}
+                  showUploadList={false}
+                >
+                  <Button
+                    icon={<UploadOutlined />}
+                    loading={uploading}
+                  >
+                    Resim Seç
+                  </Button>
+                </Upload>
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt="Yüklenen Resim"
+                    className="mt-2 max-w-xs"
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -195,8 +237,6 @@ function ProductCreateComp() {
           </Form.Item>
         </Form>
       )}
-
-      {cpError && <p className="text-red-500 mt-4">Ürün oluşturulurken bir hata oluştu.</p>}
     </div>
   );
 }
