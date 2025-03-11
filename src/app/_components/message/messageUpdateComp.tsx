@@ -30,7 +30,7 @@ interface MessageType {
   product: {
     id: number;
     productName: string;
-    image: string;
+    images: string[];
     category: {
       categoryName: string;
     };
@@ -163,7 +163,7 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
           md={8}
         >
           <img
-            src={message?.product.image || "/noimage.jpg"}
+            src={message?.product.images && message?.product?.images?.length > 0 ? message?.product.images[0] : "/noimage.jpg"}
             alt="Ürün Görseli"
             className="mt-2 w-full h-32 object-cover "
             style={{ objectFit: "cover", height: "150px", width: "100%" }}

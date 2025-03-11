@@ -6,7 +6,7 @@ export const MOSTCLICKEDTHREEPRODUCT = gql`
       id
       productName
       brand
-      image
+      images
       widths
       length
       thickness
@@ -42,7 +42,7 @@ export const PRODUCT_OF_COMPANY = gql`
         id
         categoryName
       }
-      image
+      images
       createdAt
       updatedAt
     }
@@ -55,7 +55,7 @@ export const GET_PRODUCT = gql`
       id
       productName
       brand
-      image
+      images
       widths
       length
       thickness

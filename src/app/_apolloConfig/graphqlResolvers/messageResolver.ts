@@ -63,7 +63,7 @@ export const LASTFIVEMESSAGE = gql`
         product {
           id
           productName
-          image
+          images
           onAd
           inStock
           category {
@@ -105,7 +105,7 @@ export const MESSAGE = gql`
       phone
       product {
         id
-        image
+        images
         productName
         category {
           categoryName

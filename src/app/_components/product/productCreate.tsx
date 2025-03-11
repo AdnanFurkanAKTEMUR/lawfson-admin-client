@@ -4,15 +4,15 @@ import { CREATE_PRODUCT } from "@/app/_apolloConfig/graphqlResolvers/productReso
 import { useMutation, useQuery } from "@apollo/client";
 import { Form, Input, Button, Select, Checkbox, message, Row, Col, Upload } from "antd";
 import { useState } from "react";
-import { LoadingOutlined, UploadOutlined } from "@ant-design/icons";
+import { LoadingOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
 const UPLOAD_URL = "https://www.adnanfurkanaktemur.com.tr/upload/";
-
+const DELETE_URL = "https://www.adnanfurkanaktemur.com.tr/upload/delete/";
 type Product = {
   productName: string;
   categoryId: number;
-  image?: string;
+  images?: string[];
   widths?: string;
   length?: string;
   thickness?: string;
@@ -27,11 +27,10 @@ type Product = {
 
 function ProductCreateComp() {
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const { data: cData, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
   const [createProductMutate, { loading: cpLoading }] = useMutation(CREATE_PRODUCT);
   const [uploading, setUploading] = useState(false);
-
   const handleUpload = async (file: File) => {
     setUploading(true);
     const formData = new FormData();
@@ -45,7 +44,7 @@ function ProductCreateComp() {
 
       const result = await response.json();
       if (response.ok) {
-        setImageUrl(result.url);
+        setImageUrls((prev) => [...prev, result.url]);
         message.success("Resim başarıyla yüklendi!");
       } else {
         message.error(result.error || "Resim yüklenirken hata oluştu.");
@@ -56,12 +55,32 @@ function ProductCreateComp() {
     setUploading(false);
   };
 
+  const handleDeleteImage = async (url: string) => {
+    const fileName = url.split("/").pop();
+    try {
+      const response = await fetch(`${DELETE_URL}?fileName=${fileName}`, {
+        method: "DELETE",
+      });
+      console.log(response);
+      const result = await response.json();
+      if (response.ok) {
+        setImageUrls((prev) => prev.filter((img) => img !== url));
+        message.success("Resim başarıyla silindi!");
+      } else {
+        message.error(result.error || "Resim silinirken hata oluştu.");
+      }
+    } catch (error) {
+      console.log(error);
+      message.error("Bağlantı hatası, tekrar deneyin.");
+    }
+  };
+
   const onFinish = async (values: Product) => {
     try {
-      await createProductMutate({ variables: { input: { ...values, image: imageUrl } } });
+      await createProductMutate({ variables: { input: { ...values, images: imageUrls } } });
       message.success("Ürün başarıyla oluşturuldu!");
       form.resetFields();
-      setImageUrl(null);
+      setImageUrls([]);
     } catch (error) {
       message.error("Ürün oluşturulurken bir hata oluştu.");
     }
@@ -110,6 +129,8 @@ function ProductCreateComp() {
                 <Select
                   showSearch
                   placeholder="Kategori seç"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => (option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())}
                 >
                   {cData?.categoryLeafs.map((cat: any) => (
                     <Select.Option
@@ -215,13 +236,28 @@ function ProductCreateComp() {
                     Resim Seç
                   </Button>
                 </Upload>
-                {imageUrl && (
-                  <img
-                    src={imageUrl}
-                    alt="Yüklenen Resim"
-                    className="mt-2 max-w-xs"
-                  />
-                )}
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {imageUrls.map((url) => (
+                    <div
+                      key={url}
+                      className="relative"
+                    >
+                      <img
+                        src={url}
+                        alt="Yüklenen Resim"
+                        className="w-24 h-24 object-cover border rounded"
+                      />
+                      <Button
+                        type="primary"
+                        danger
+                        size="small"
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleDeleteImage(url)}
+                        className="absolute top-0 right-0"
+                      />
+                    </div>
+                  ))}
+                </div>
               </Form.Item>
             </Col>
           </Row>

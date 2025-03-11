@@ -1,16 +1,14 @@
 "use client";
 
-import { GETALL_CAT, GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
+import { GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
 import { GET_PRODUCT, UPDATE_PRODUCT } from "@/app/_apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
-import { Form, Input, Select, Button, message, Spin, Row, Col, Checkbox } from "antd";
-import { useEffect } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, message, Spin, Row, Col, Checkbox, Upload } from "antd";
+import { useEffect, useState } from "react";
+import { LoadingOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 
-type Category = {
-  id: number;
-  fullPathName: string;
-};
+const UPLOAD_URL = "https://www.adnanfurkanaktemur.com.tr/upload/";
+const DELETE_URL = "https://www.adnanfurkanaktemur.com.tr/upload/delete/";
 
 type Product = {
   id: number;
@@ -19,7 +17,7 @@ type Product = {
     id: number;
     categoryName: string;
   };
-  image?: string;
+  images?: string[];
   widths?: string;
   length?: string;
   thickness?: string;
@@ -34,59 +32,64 @@ type Product = {
 
 function ProductUpdateComp({ productId }: { productId: string }) {
   const [form] = Form.useForm();
-
-  // Ürün verisini almak için query
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [deletedImages, setDeletedImages] = useState<string[]>([]);
   const {
     data: pData,
-    error: pError,
     loading: pLoading,
+    error: pError,
   } = useQuery(GET_PRODUCT, {
     variables: { input: { id: parseInt(productId) } },
   });
+  const { data: cData, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
+  const [updateProductMutation, { loading: updateLoading }] = useMutation(UPDATE_PRODUCT);
+  const [uploading, setUploading] = useState(false);
 
-  // Kategori listesini almak için query
-  const { data: cData, error: cError, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
-
-  // Ürünü güncellemek için mutation
-  const [updateProductMutation, { data: updateData, error: updateError, loading: updateLoading }] = useMutation(UPDATE_PRODUCT);
-
-  // Ürün verisi yüklendiğinde formu doldur
   useEffect(() => {
     if (pData?.getProduct) {
-      form.setFieldsValue({
-        productName: pData.getProduct.productName,
-        categoryId: pData.getProduct?.category.id,
-        image: pData.getProduct?.image,
-        widths: pData.getProduct?.widths,
-        length: pData.getProduct?.length,
-        thickness: pData.getProduct?.thickness,
-        color: pData.getProduct?.color,
-        origin: pData.getProduct?.origin,
-        surfaceTreatment: pData.getProduct?.surfaceTreatment,
-        description: pData.getProduct?.description,
-        onAd: pData.getProduct?.onAd,
-        location: pData.getProduct?.location,
-        brand: pData.getProduct?.brand,
-      });
+      form.setFieldsValue({ ...pData.getProduct, categoryId: pData.getProduct.category?.id });
+      setImageUrls(pData.getProduct.images || []);
     }
-    if (pError) {
-      message.error("Ürün bilgisi alınırken bir hata oluştu.");
-    }
-  }, [pData, pError, form]);
+  }, [pData, form]);
 
-  // Güncelleme formunun gönderilmesi
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const response = await fetch(UPLOAD_URL, { method: "POST", body: formData });
+      const result = await response.json();
+      if (response.ok) {
+        setImageUrls((prev) => [...prev, result.url]);
+        message.success("Resim başarıyla yüklendi!");
+      }
+    } catch {
+      message.error("Bağlantı hatası, tekrar deneyin.");
+    }
+    setUploading(false);
+  };
+
+  const handleDeleteImage = (url: string) => {
+    setImageUrls((prev) => prev.filter((img) => img !== url));
+    setDeletedImages((prev) => [...prev, url]);
+  };
+
   const onFinish = async (values: any) => {
     try {
       await updateProductMutation({
-        variables: {
-          input: {
-            id: parseInt(productId),
-            ...values,
-          },
-        },
+        variables: { input: { id: parseInt(productId), ...values, images: imageUrls } },
       });
+
+      // Sunucudan silme işlemi güncelleme esnasında yapılır
+      for (const url of deletedImages) {
+        const fileName = url.split("/").pop();
+        await fetch(`${DELETE_URL}?fileName=${fileName}`, { method: "DELETE" });
+      }
+
       message.success("Ürün başarıyla güncellendi!");
+      setDeletedImages([]); // Güncelleme sonrası silinenleri sıfırla
     } catch (err) {
+      console.log(err);
       message.error("Ürün güncellenirken bir hata oluştu.");
     }
   };
@@ -106,21 +109,15 @@ function ProductUpdateComp({ productId }: { productId: string }) {
     );
   }
 
-  if (pError) {
-    return <p className="text-red-500">Ürün bulunamadı!</p>;
-  }
-
   return (
     <div className="p-8 bg-gray-50">
       <h1 className="text-2xl font-semibold mb-4">Ürün Güncelle</h1>
-
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
       >
         <Row gutter={16}>
-          {/* Sol taraf */}
           <Col
             xs={24}
             md={12}
@@ -128,15 +125,14 @@ function ProductUpdateComp({ productId }: { productId: string }) {
             <Form.Item
               label="Ürün Adı"
               name="productName"
-              rules={[{ required: true, message: "Lütfen ürün adını giriniz" }]}
+              rules={[{ required: true }]}
             >
-              <Input placeholder="Ürün adı" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Kategori"
               name="categoryId"
-              rules={[{ required: true, message: "Lütfen kategori seçiniz" }]}
+              rules={[{ required: true }]}
             >
               <Select
                 showSearch
@@ -158,38 +154,33 @@ function ProductUpdateComp({ productId }: { productId: string }) {
               label="Marka"
               name="brand"
             >
-              <Input placeholder="Marka" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Genişlik"
               name="widths"
             >
-              <Input placeholder="Genişlik" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Uzunluk"
               name="length"
             >
-              <Input placeholder="Uzunluk" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Kalınlık"
               name="thickness"
             >
-              <Input placeholder="Kalınlık" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Renk"
               name="color"
             >
-              <Input placeholder="Renk" />
+              <Input />
             </Form.Item>
           </Col>
-          {/* Sağ taraf */}
           <Col
             xs={24}
             md={12}
@@ -198,49 +189,72 @@ function ProductUpdateComp({ productId }: { productId: string }) {
               label="Menşei"
               name="origin"
             >
-              <Input placeholder="Menşei" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Yüzey İşlemi"
               name="surfaceTreatment"
             >
-              <Input placeholder="Yüzey İşlemi" />
+              <Input />
             </Form.Item>
-
             <Form.Item
               label="Açıklama"
               name="description"
             >
-              <Input.TextArea
-                rows={4}
-                placeholder="Açıklama"
-              />
+              <Input.TextArea rows={4} />
             </Form.Item>
-
             <Form.Item
               name="onAd"
               valuePropName="checked"
             >
               <Checkbox>İlana Koy</Checkbox>
             </Form.Item>
-
             <Form.Item
               label="Konum"
               name="location"
             >
-              <Input placeholder="Konum" />
+              <Input />
             </Form.Item>
-
-            <Form.Item
-              label="Görsel URL"
-              name="image"
-            >
-              <Input placeholder="Görsel URL" />
+            <Form.Item label="Resim Yükle">
+              <Upload
+                beforeUpload={(file) => {
+                  handleUpload(file);
+                  return false;
+                }}
+                showUploadList={false}
+              >
+                <Button
+                  icon={<UploadOutlined />}
+                  loading={uploading}
+                >
+                  Resim Seç
+                </Button>
+              </Upload>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {imageUrls.map((url) => (
+                  <div
+                    key={url}
+                    className="relative"
+                  >
+                    <img
+                      src={url}
+                      alt="Yüklenen Resim"
+                      className="w-24 h-24 object-cover border rounded"
+                    />
+                    <Button
+                      type="primary"
+                      danger
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteImage(url)}
+                      className="absolute top-0 right-0"
+                    />
+                  </div>
+                ))}
+              </div>
             </Form.Item>
           </Col>
         </Row>
-
         <Form.Item>
           <Button
             type="primary"
@@ -251,8 +265,6 @@ function ProductUpdateComp({ productId }: { productId: string }) {
           </Button>
         </Form.Item>
       </Form>
-
-      {updateError && <p className="text-red-500">Güncelleme sırasında bir hata oluştu.</p>}
     </div>
   );
 }

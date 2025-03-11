@@ -20,7 +20,7 @@ interface ProductMostClicked {
   id: string;
   productName: string;
   brand?: string;
-  image?: string;
+  images?: string[];
   widths?: number;
   length?: number;
   thickness?: number;
@@ -67,7 +67,7 @@ const MostClickedProductComp: React.FC = () => {
                 <Link href={`productupdate/${product.id}`}>
                   <Image
                     alt={product.productName}
-                    src={product.image || "/noimage.jpg"}
+                    src={product.images && product?.images?.length > 0 ? product.images[0] : "/noimage.jpg"}
                     className="max-h-48 w-full object-cover" // 📌 Maksimum 48 birim yükseklik, genişlik sınırlı
                     preview={false}
                   />

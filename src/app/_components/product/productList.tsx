@@ -11,7 +11,7 @@ import formatDate from "@/helpers/formatDate";
 interface Product {
   id: number;
   productName: string;
-  image?: string;
+  images?: string[];
   category: {
     categoryName: string;
   };
@@ -62,11 +62,11 @@ function ProductListComp() {
   const columns: ColumnsType<Product> = [
     {
       title: "Resim",
-      dataIndex: "image",
-      key: "image",
+      dataIndex: "images",
+      key: "images",
       render: (text, record) => (
         <Image
-          src={record.image ? record.image : "/noimage.jpg"}
+          src={record.images && record.images?.length > 0 ? record.images[0] : "/noimage.jpg"}
           alt={record.productName}
           width={50}
           height={50}
