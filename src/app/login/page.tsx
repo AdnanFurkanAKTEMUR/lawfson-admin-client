@@ -13,19 +13,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const onFinish = async (values: any) => {
-    await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
-  };
-  // const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
+  const [loginMutation, { data: loginData, error: loginError, loading: loginLoading }] = useMutation(ADMIN_USER_LOGIN);
 
-  /* const onFinish2 = async (values: any) => {
+  const onFinish = async (values: any) => {
     console.log(values);
     try {
       loginMutation({ variables: { input: values } })
@@ -34,7 +24,7 @@ export default function Login() {
             message: "Başarılı",
             description: "Giriş Başarılı!. Ana Sayfaya yönlendiriliyorsunuz!",
           });
-          console.log(values.data);
+          console.log(values.data.adminUserLogin.userName);
           await signIn("credentials", {
             id: values.data.adminUserLogin.id,
             userName: values.data.adminUserLogin.userName,
@@ -45,11 +35,9 @@ export default function Login() {
             isRoot: values.data.adminUserLogin.isRoot,
             createdAt: values.data.adminUserLogin.createdAt,
             updatedAt: values.data.adminUserLogin.updatedAt,
-            redirect: false,
+            redirect: true,
+            callbackUrl: "/",
           });
-          setTimeout(() => {
-            router.push("/");
-          }, 1000);
         })
         .catch((e) => {
           console.error("Giriş yapma hatası:", e);
@@ -62,7 +50,7 @@ export default function Login() {
       console.error("Login Error:", e);
     }
   };
- */
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">

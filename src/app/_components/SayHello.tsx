@@ -4,7 +4,7 @@ import Dashboard from "./dashboard/DashboardComp";
 const SayHello: React.FC = () => {
   return (
     <>
-      <Dashboard />
+      
     </>
   );
 };

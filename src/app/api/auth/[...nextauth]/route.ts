@@ -12,26 +12,7 @@ const handler = NextAuth({
       type: "credentials",
       //@ts-ignore
       async authorize(credentials, req) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
-
-        // Kullanıcı bilgileri doğruysa döndür
-        return {
-          id: "18",
-          userName: "Lawfson",
-          email: "lawfson@lawfson.com",
-          companyName: "Lawfson",
-          companyId: "5",
-          role: "superadmin",
-          createdAt: "2321312",
-          updatedAt: "21323123",
-        };
-      },
-      /*
-      async authorize(credentials, req) {
-        const { id, userName, email, role, companyName, companyId, createdAt, updatedAt } = credentials as {
+        const { id, userName, email, role, companyName, companyId, createdAt, updatedAt } = credentials as unknown as {
           id: number;
           userName: string;
           email: string;
@@ -50,11 +31,11 @@ const handler = NextAuth({
           companyName,
           companyId,
           role,
+
           createdAt,
           updatedAt,
         };
       },
-      */
     }),
   ],
 

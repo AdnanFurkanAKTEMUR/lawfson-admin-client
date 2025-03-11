@@ -6,42 +6,17 @@ import { useSession } from "next-auth/react";
 const Navbar = () => {
   const { data: session } = useSession();
 
-  console.log(session);
-
   // Kullanıcının adının ilk harfini alacak fonksiyon
   const getInitial = (name: string) => {
     return name ? name.charAt(0).toUpperCase() : "";
   };
-
+  console.log(session);
   return (
     <nav className="bg-white p-4 border-l-2 border-gray-100 flex justify-between">
       <div className="flex justify-between items-center text-gray-600 w-full">
         {/* Sol Kısım: Linkler */}
         <div className="flex space-x-6">
-          <Link
-            href="/"
-            className="px-3 py-2 rounded hover:bg-gray-200 hover:text-blue-500 transition-colors duration-200"
-          >
-            Ana Sayfa
-          </Link>
-          <Link
-            href="/firsatlar"
-            className="px-3 py-2 rounded hover:bg-gray-200 hover:text-blue-500 transition-colors duration-200"
-          >
-            Fırsatlar
-          </Link>
-          <Link
-            href="/gorusmeler"
-            className="px-3 py-2 rounded hover:bg-gray-200 hover:text-blue-500 transition-colors duration-200"
-          >
-            Görüşmeler
-          </Link>
-          <Link
-            href="/satislar"
-            className="px-3 py-2 rounded hover:bg-gray-200 hover:text-blue-500 transition-colors duration-200"
-          >
-            Satışlar
-          </Link>
+          <h1 className="text-xl">Plaport Admin Paneli</h1>
         </div>
 
         {/* Sağ Kısım: Kullanıcı Profil */}
