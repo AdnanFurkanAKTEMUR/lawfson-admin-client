@@ -113,21 +113,19 @@ export default function JobOrderUpdateComp({ joborderId }: { joborderId: string 
             <Col span={24}>
               <Text strong>Atanan Kişi:</Text>
               <Select
+                showSearch
                 className="w-full"
                 loading={getAllAdminUserLoading}
                 value={assignedAdmin}
                 onChange={(value) => setAssignedAdmin(value)}
                 placeholder="Admin Seçin"
-              >
-                {getAllAdminUserData?.adminUsersOfCompany.map((admin: AdminUsersOfCompany) => (
-                  <Option
-                    key={admin.id}
-                    value={admin.id.toString()}
-                  >
-                    {admin.userName}
-                  </Option>
-                ))}
-              </Select>
+                optionFilterProp="label" // Arama işlemi 'label' üzerinden yapılacak
+                filterOption={(input, option: any) => option?.label?.toLowerCase().includes(input.toLowerCase())}
+                options={getAllAdminUserData?.adminUsersOfCompany.map((admin: AdminUsersOfCompany) => ({
+                  value: admin.id.toString(),
+                  label: admin.userName, // Arama için kullanılacak değer
+                }))}
+              />
             </Col>
 
             {/* Durum Seçimi */}

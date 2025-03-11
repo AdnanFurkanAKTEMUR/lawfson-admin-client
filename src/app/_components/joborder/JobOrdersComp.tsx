@@ -108,7 +108,7 @@ function JobOrdersComp() {
       {/* 🔍 **Arama ve Filtreleme Alanı** */}
       <Space
         direction="vertical"
-        className="mb-4 w-full"
+        className="mb-4 mt-4 w-full"
       >
         <Input
           placeholder="Atanan kişi veya not içeriğine göre ara..."
@@ -126,6 +126,13 @@ function JobOrdersComp() {
           <Radio.Button value="Beklemede">Beklemede</Radio.Button>
           <Radio.Button value="Yapılmadı">Yapılmadı</Radio.Button>
         </Radio.Group>
+        <Link
+          className="p-1 bg-blue-400 text-white rounded"
+          href={"/jobordercreate"}
+        >
+          {" "}
+          İş emri oluştur
+        </Link>
       </Space>
 
       {/* 📋 **Tablo** */}

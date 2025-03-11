@@ -24,6 +24,15 @@ export const GET_ALL_JOBORDERS = gql`
   }
 `;
 
+export const CREATE_JOBORDER = gql`
+  mutation CreateJobOrder($input: createJobOrderInput) {
+    createJobOrder(input: $input) {
+      status
+      msg
+    }
+  }
+`;
+
 export const GET_JOBORDER = gql`
   query GetJobOrder($input: getWithId) {
     getJobOrder(input: $input) {

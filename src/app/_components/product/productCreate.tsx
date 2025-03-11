@@ -23,6 +23,7 @@ type Product = {
   onAd?: boolean;
   location?: string;
   brand?: string;
+  inStock?: boolean;
 };
 
 function ProductCreateComp() {
@@ -61,7 +62,7 @@ function ProductCreateComp() {
       const response = await fetch(`${DELETE_URL}?fileName=${fileName}`, {
         method: "DELETE",
       });
-      console.log(response);
+
       const result = await response.json();
       if (response.ok) {
         setImageUrls((prev) => prev.filter((img) => img !== url));
@@ -213,7 +214,12 @@ function ProductCreateComp() {
               >
                 <Checkbox>İlana Koy</Checkbox>
               </Form.Item>
-
+              <Form.Item
+                name="inStock"
+                valuePropName="checked"
+              >
+                <Checkbox>Stok var mı?</Checkbox>
+              </Form.Item>
               <Form.Item
                 label="Konum"
                 name="location"

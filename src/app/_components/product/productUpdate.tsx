@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Form, Input, Select, Button, message, Spin, Row, Col, Checkbox, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { LoadingOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 const UPLOAD_URL = "https://www.adnanfurkanaktemur.com.tr/upload/";
 const DELETE_URL = "https://www.adnanfurkanaktemur.com.tr/upload/delete/";
@@ -26,6 +27,7 @@ type Product = {
   surfaceTreatment?: string;
   description?: string;
   onAd?: boolean;
+  inStock?: boolean;
   location?: string;
   brand?: string;
 };
@@ -34,6 +36,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
   const [form] = Form.useForm();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [deletedImages, setDeletedImages] = useState<string[]>([]);
+  const router = useRouter();
   const {
     data: pData,
     loading: pLoading,
@@ -41,8 +44,15 @@ function ProductUpdateComp({ productId }: { productId: string }) {
   } = useQuery(GET_PRODUCT, {
     variables: { input: { id: parseInt(productId) } },
   });
-  const { data: cData, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
-  const [updateProductMutation, { loading: updateLoading }] = useMutation(UPDATE_PRODUCT);
+  const {
+    data: cData,
+    loading: cLoading,
+    refetch,
+  } = useQuery(GETCATEGORYLEAFS, {
+    fetchPolicy: "no-cache", // Sorguyu her seferinde ağdan getirir, cache'i kullanmaz
+  });
+
+  const [updateProductMutation, { loading: updateLoading, data: updateData }] = useMutation(UPDATE_PRODUCT);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -50,7 +60,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
       form.setFieldsValue({ ...pData.getProduct, categoryId: pData.getProduct.category?.id });
       setImageUrls(pData.getProduct.images || []);
     }
-  }, [pData, form]);
+  }, [pData, form, updateData]);
 
   const handleUpload = async (file: File) => {
     setUploading(true);
@@ -208,6 +218,12 @@ function ProductUpdateComp({ productId }: { productId: string }) {
               valuePropName="checked"
             >
               <Checkbox>İlana Koy</Checkbox>
+            </Form.Item>
+            <Form.Item
+              name="inStock"
+              valuePropName="checked"
+            >
+              <Checkbox>Stok var mı?</Checkbox>
             </Form.Item>
             <Form.Item
               label="Konum"

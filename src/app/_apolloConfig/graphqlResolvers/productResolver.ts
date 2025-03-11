@@ -66,6 +66,7 @@ export const GET_PRODUCT = gql`
       onAd
       location
       adDate
+      inStock
       category {
         id
         categoryName
