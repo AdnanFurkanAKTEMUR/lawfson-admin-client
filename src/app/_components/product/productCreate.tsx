@@ -83,6 +83,8 @@ function ProductCreateComp() {
       form.resetFields();
       setImageUrls([]);
     } catch (error) {
+      console.log(error);
+
       message.error("Ürün oluşturulurken bir hata oluştu.");
     }
   };

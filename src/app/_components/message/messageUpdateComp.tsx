@@ -55,14 +55,7 @@ function formatDate(dateString: string) {
 }
 
 export default function MessageUpdateComp({ messageId }: { messageId: string }) {
-  const {
-    data: getMessageData,
-    error: getMessageError,
-    loading: getMessageLoading,
-    refetch: refetchMessage,
-  } = useQuery(MESSAGE, {
-    variables: { input: { id: parseInt(messageId) } },
-  });
+  const { data: getMessageData, error: getMessageError, loading: getMessageLoading, refetch: refetchMessage } = useQuery(MESSAGE, { fetchPolicy: "network-only", variables: { input: { id: parseInt(messageId) } } });
 
   const [updateMessageMutation, { loading: uLoading }] = useMutation(UPDATE_MESSAGE);
   const [isReturn, setIsReturn] = useState(false);
@@ -85,7 +78,7 @@ export default function MessageUpdateComp({ messageId }: { messageId: string }) 
           },
         },
       });
-      refetchMessage();
+      await refetchMessage();
       notification.success({
         message: "Başarılı",
         description: "Güncelleme başarılı bir şekilde tamamlandı.",

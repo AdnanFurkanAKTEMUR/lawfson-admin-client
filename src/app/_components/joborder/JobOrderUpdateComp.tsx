@@ -38,14 +38,7 @@ interface AdminUsersOfCompany {
 }
 
 export default function JobOrderUpdateComp({ joborderId }: { joborderId: string }) {
-  const {
-    data: getJobOrderData,
-    error: getJobOrderError,
-    loading: getJobOrderLoading,
-    refetch: refetchJobOrder,
-  } = useQuery(GET_JOBORDER, {
-    variables: { input: { id: parseInt(joborderId) } },
-  });
+  const { data: getJobOrderData, error: getJobOrderError, loading: getJobOrderLoading, refetch: refetchJobOrder } = useQuery(GET_JOBORDER, { fetchPolicy: "network-only", variables: { input: { id: parseInt(joborderId) } } });
 
   const { data: getAllAdminUserData, loading: getAllAdminUserLoading, error: getAllAdminUserError } = useQuery(ADMINUSERS_OF_COMPANY);
   const [updateJobOrder, { loading: jobOrderLoading }] = useMutation(UPDATE_JOBORDER);
@@ -81,7 +74,7 @@ export default function JobOrderUpdateComp({ joborderId }: { joborderId: string 
 
       if (data?.updateJobOrder) {
         notification.success({ message: "Başarı!", description: "İş emri başarıyla güncellendi!" });
-        refetchJobOrder(); // Güncellenmiş veriyi tekrar çek
+        await refetchJobOrder(); // Güncellenmiş veriyi tekrar çek
       } else {
         notification.error({ message: "Hata!", description: "Güncelleme başarısız oldu." });
       }

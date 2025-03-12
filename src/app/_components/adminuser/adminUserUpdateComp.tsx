@@ -17,8 +17,8 @@ type AdminUser = {
 };
 export default function AdminUserUpdateComp({ adminUserId }: { adminUserId: string }) {
   const [form] = Form.useForm();
-  const { data: auData, error: auError, loading: auLoading } = useQuery(ADMIN_USER, { variables: { input: { id: parseInt(adminUserId) } } });
-  console.log(auData?.adminUserGet);
+  const { data: auData, error: auError, loading: auLoading, refetch: refetchAdminUser } = useQuery(ADMIN_USER, { fetchPolicy: "network-only", variables: { input: { id: parseInt(adminUserId) } } });
+
   const [updateMutate, { data: uauData, error: uauError, loading: uauLoading }] = useMutation(ADMINUSER_UPDATE);
   // Ürün verisi yüklendiğinde formu doldur
   useEffect(() => {
@@ -50,9 +50,10 @@ export default function AdminUserUpdateComp({ adminUserId }: { adminUserId: stri
           },
         },
       });
-      message.success("Ürün başarıyla güncellendi!");
+      await refetchAdminUser();
+      message.success("Kullanıcı başarıyla güncellendi!");
     } catch (err) {
-      message.error("Ürün güncellenirken bir hata oluştu.");
+      message.error("Kullanıcı güncellenirken bir hata oluştu.");
     }
   };
 

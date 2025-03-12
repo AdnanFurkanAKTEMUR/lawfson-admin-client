@@ -49,7 +49,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
     loading: cLoading,
     refetch,
   } = useQuery(GETCATEGORYLEAFS, {
-    fetchPolicy: "no-cache", // Sorguyu her seferinde ağdan getirir, cache'i kullanmaz
+    fetchPolicy: "network-only", // Sorguyu her seferinde ağdan getirir, cache'i kullanmaz
   });
 
   const [updateProductMutation, { loading: updateLoading, data: updateData }] = useMutation(UPDATE_PRODUCT);
@@ -98,6 +98,7 @@ function ProductUpdateComp({ productId }: { productId: string }) {
 
       message.success("Ürün başarıyla güncellendi!");
       setDeletedImages([]); // Güncelleme sonrası silinenleri sıfırla
+      await refetch();
     } catch (err) {
       console.log(err);
       message.error("Ürün güncellenirken bir hata oluştu.");
