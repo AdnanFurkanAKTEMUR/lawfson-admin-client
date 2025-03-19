@@ -2,7 +2,7 @@
 import { GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
 import { CREATE_PRODUCT } from "@/app/_apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
-import { Form, Input, Button, Select, Checkbox, message, Row, Col, Upload } from "antd";
+import { Form, Input, Button, Select, Checkbox, message, Row, Col, Upload, InputNumber } from "antd";
 import { useState } from "react";
 import { LoadingOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
@@ -28,6 +28,7 @@ type Product = {
   city?: string;
   brand?: string;
   inStock?: boolean;
+  price?: any;
 };
 
 function ProductCreateComp() {
@@ -82,8 +83,9 @@ function ProductCreateComp() {
   };
 
   const onFinish = async (values: Product) => {
+    const floatPrice = values.price ? parseFloat(values.price) : null;
     try {
-      await createProductMutate({ variables: { input: { ...values, images: imageUrls } } });
+      await createProductMutate({ variables: { input: { ...values, price: floatPrice, images: imageUrls } } });
       message.success("Ürün başarıyla oluşturuldu!");
       form.resetFields();
       setImageUrls([]);
@@ -170,6 +172,18 @@ function ProductCreateComp() {
                 name="length"
               >
                 <Input placeholder="Uzunluk" />
+              </Form.Item>
+              <Form.Item
+                label="Fiyat (12.21 şeklinde nokta koyunuz)"
+                name="price"
+                rules={[{ required: true, message: "Lütfen geçerli bir fiyat girin!" }]}
+              >
+                <InputNumber
+                  min={0}
+                  step={0.01}
+                  placeholder="Fiyat"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
 
               <Form.Item

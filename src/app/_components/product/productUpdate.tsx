@@ -3,7 +3,7 @@
 import { GETCATEGORYLEAFS } from "@/app/_apolloConfig/graphqlResolvers/categoryResolver";
 import { GET_PRODUCT, UPDATE_PRODUCT } from "@/app/_apolloConfig/graphqlResolvers/productResolver";
 import { useMutation, useQuery } from "@apollo/client";
-import { Form, Input, Select, Button, message, Spin, Row, Col, Checkbox, Upload } from "antd";
+import { Form, Input, Select, Button, message, Spin, Row, Col, Checkbox, Upload, InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { LoadingOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
@@ -68,9 +68,10 @@ function ProductUpdateComp({ productId }: { productId: string }) {
   };
 
   const onFinish = async (values: any) => {
+    const floatPrice = values.price ? parseFloat(values.price) : null;
     try {
       await updateProductMutation({
-        variables: { input: { id: parseInt(productId), ...values, images: imageUrls } },
+        variables: { input: { id: parseInt(productId), ...values, price: floatPrice, images: imageUrls } },
       });
 
       // Sunucudan silme işlemi güncelleme esnasında yapılır
@@ -161,6 +162,19 @@ function ProductUpdateComp({ productId }: { productId: string }) {
               name="length"
             >
               <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Fiyat (12.21 şeklinde nokta koyunuz)"
+              name="price"
+              rules={[{ required: true, message: "Lütfen geçerli bir fiyat girin!" }]}
+            >
+              <InputNumber
+                min={0}
+                step={0.01}
+                placeholder="Fiyat"
+                style={{ width: "100%" }}
+              />
             </Form.Item>
             <Form.Item
               label="Kalınlık"

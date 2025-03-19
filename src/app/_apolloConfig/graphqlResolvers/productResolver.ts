@@ -11,6 +11,7 @@ export const MOSTCLICKEDTHREEPRODUCT = gql`
       length
       thickness
       color
+      price
       origin
       surfaceTreatment
       description
@@ -39,6 +40,7 @@ export const PRODUCT_OF_COMPANY = gql`
     productsOfCompany {
       id
       productName
+      price
       category {
         id
         categoryName
@@ -61,6 +63,7 @@ export const GET_PRODUCT = gql`
       length
       thickness
       color
+      price
       origin
       surfaceTreatment
       description
