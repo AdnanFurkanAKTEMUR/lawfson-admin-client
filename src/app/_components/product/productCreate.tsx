@@ -6,6 +6,9 @@ import { Form, Input, Button, Select, Checkbox, message, Row, Col, Upload } from
 import { useState } from "react";
 import { LoadingOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
+import countryData from "./countries.json";
+import colorsData from "./colors.json";
+const countryDataTyped: Record<string, string[]> = countryData;
 
 const UPLOAD_URL = "https://www.adnanfurkanaktemur.com.tr/upload/";
 const DELETE_URL = "https://www.adnanfurkanaktemur.com.tr/upload/delete/";
@@ -21,7 +24,8 @@ type Product = {
   surfaceTreatment?: string;
   description?: string;
   onAd?: boolean;
-  location?: string;
+  country?: string;
+  city?: string;
   brand?: string;
   inStock?: boolean;
 };
@@ -32,6 +36,7 @@ function ProductCreateComp() {
   const { data: cData, loading: cLoading } = useQuery(GETCATEGORYLEAFS);
   const [createProductMutate, { loading: cpLoading }] = useMutation(CREATE_PRODUCT);
   const [uploading, setUploading] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const handleUpload = async (file: File) => {
     setUploading(true);
     const formData = new FormData();
@@ -177,8 +182,18 @@ function ProductCreateComp() {
               <Form.Item
                 label="Renk"
                 name="color"
+                rules={[{ required: false }]}
               >
-                <Input placeholder="Renk" />
+                <Select placeholder="Renk seç">
+                  {colorsData.map((color) => (
+                    <Select.Option
+                      key={color}
+                      value={color}
+                    >
+                      {color}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
 
@@ -223,10 +238,44 @@ function ProductCreateComp() {
                 <Checkbox>Stok var mı?</Checkbox>
               </Form.Item>
               <Form.Item
-                label="Konum"
-                name="location"
+                label="Ülke"
+                name="country"
+                rules={[{ required: true, message: "Lütfen ülke seçiniz" }]}
               >
-                <Input placeholder="Konum" />
+                <Select
+                  placeholder="Ülke seç"
+                  onChange={setSelectedCountry}
+                >
+                  {Object.keys(countryData).map((country) => (
+                    <Select.Option
+                      key={country}
+                      value={country}
+                    >
+                      {country}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Şehir"
+                name="city"
+                rules={[{ required: true, message: "Lütfen şehir seçiniz" }]}
+              >
+                <Select
+                  placeholder="Şehir seç"
+                  disabled={!selectedCountry}
+                >
+                  {selectedCountry &&
+                    countryDataTyped[selectedCountry]?.map((city) => (
+                      <Select.Option
+                        key={city}
+                        value={city}
+                      >
+                        {city}
+                      </Select.Option>
+                    ))}
+                </Select>
               </Form.Item>
 
               <Form.Item label="Resim Yükle">

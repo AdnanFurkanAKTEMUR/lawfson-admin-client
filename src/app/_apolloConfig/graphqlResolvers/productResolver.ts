@@ -15,7 +15,8 @@ export const MOSTCLICKEDTHREEPRODUCT = gql`
       surfaceTreatment
       description
       onAd
-      location
+      country
+      city
       adDate
       category {
         id
@@ -64,7 +65,8 @@ export const GET_PRODUCT = gql`
       surfaceTreatment
       description
       onAd
-      location
+      country
+      city
       adDate
       inStock
       category {
