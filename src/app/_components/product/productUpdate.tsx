@@ -11,8 +11,8 @@ import countryData from "./countries.json";
 import colorsData from "./colors.json";
 
 const countryDataTyped: Record<string, string[]> = countryData;
-const UPLOAD_URL = "https://www.adnanfurkanaktemur.com.tr/upload/";
-const DELETE_URL = "https://www.adnanfurkanaktemur.com.tr/upload/delete/";
+const UPLOAD_URL = "https://www.plaportadmin.com/upload/";
+const DELETE_URL = "https://www.plaportadmin.com/upload/delete/";
 
 function ProductUpdateComp({ productId }: { productId: string }) {
   const [form] = Form.useForm();
