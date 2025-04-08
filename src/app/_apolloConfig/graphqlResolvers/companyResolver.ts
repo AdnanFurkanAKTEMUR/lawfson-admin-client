@@ -103,3 +103,37 @@ export const CREATE_COMPANY_ADDRESS = gql`
     }
   }
 `;
+
+export const DELETE_COMPANY_ADDRESS = gql`
+  mutation DeleteCompanyAddress($input: getWithId) {
+    deleteCompanyAddress(input: $input) {
+      status
+      msg
+    }
+  }
+`;
+
+export const GET_COMPANY_ADDRESS = gql`
+  query GetCompanyAddress($input: getWithId) {
+    getCompanyAddress(input: $input) {
+      id
+      address
+      country
+      city
+      district
+      postalCode
+      phone
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const UPDATE_COMPANY_ADDRESS = gql`
+  mutation UpdateCompanyAddress($input: updateCompanyAddressInput) {
+    updateCompanyAddress(input: $input) {
+      msg
+      status
+    }
+  }
+`;
