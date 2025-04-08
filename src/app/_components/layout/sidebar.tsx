@@ -6,6 +6,7 @@ import { SlEnvolopeLetter } from "react-icons/sl";
 import { IoBusiness } from "react-icons/io5";
 import { IoMdExit } from "react-icons/io";
 import { AiFillContainer } from "react-icons/ai";
+import { FaDoorClosed } from "react-icons/fa6";
 import { signOut } from "next-auth/react";
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false); // Sidebar state
@@ -45,6 +46,10 @@ export default function Sidebar() {
               <li className="py-2 flex items-center">
                 <AiOutlineHome className="mr-2" />
                 <a href="/">Ana Sayfa</a>
+              </li>
+              <li className="py-2 flex items-center">
+                <FaDoorClosed className="mr-2" />
+                <a href="/mycompany">Şirket Bilgilerim</a>
               </li>
               {/* <li className="py-2 flex items-center">
                 <IoBusiness className="mr-2" />

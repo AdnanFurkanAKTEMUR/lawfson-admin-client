@@ -3,6 +3,7 @@
 import { CREATE_COMPANY } from "@/app/_apolloConfig/graphqlResolvers/companyResolver";
 import { useMutation } from "@apollo/client";
 import { Button, Form, Input, Alert, Card, Select } from "antd";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const { TextArea } = Input;
@@ -239,6 +240,9 @@ function RegisterComp() {
               type="warning"
               showIcon
             />
+            <Link href={"/login"}>
+              <div className="bg-blue-600 text-white mt-4 p-2 w-full">Login</div>
+            </Link>
           </div>
         </Card>
       )}
