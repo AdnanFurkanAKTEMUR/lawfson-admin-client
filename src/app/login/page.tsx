@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { ADMIN_USER_LOGIN } from "../_apolloConfig/graphqlResolvers/adminUserResolver";
+import Link from "next/link";
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -89,6 +90,14 @@ export default function Login() {
             >
               Giriş Yap
             </Button>
+          </Form.Item>
+          <Form.Item>
+            <Link
+              className="bg-red-400 text-white px-4 hover:text-white py-2 rounded-md hover:bg-red-500 transition duration-300"
+              href="/register"
+            >
+              Kaydol
+            </Link>
           </Form.Item>
         </Form>
       </div>

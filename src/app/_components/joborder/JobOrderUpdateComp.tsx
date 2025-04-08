@@ -131,7 +131,7 @@ export default function JobOrderUpdateComp({ joborderId }: { joborderId: string 
               >
                 <Option value="Beklemede">Beklemede</Option>
                 <Option value="Yapıldı">Yapıldı</Option>
-                <Option value="İptal Edildi">İptal Edildi</Option>
+                <Option value="Yapılmadı">Yapılmadı</Option>
               </Select>
             </Col>
 
