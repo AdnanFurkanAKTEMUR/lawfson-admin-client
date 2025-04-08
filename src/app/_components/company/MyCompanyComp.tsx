@@ -8,7 +8,13 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 function MyCompanyComp() {
-  const { data: getCompanyData, loading: getCompanyLoading, error: getCompanyError } = useQuery(GET_COMPANY);
+  const {
+    data: getCompanyData,
+    loading: getCompanyLoading,
+    error: getCompanyError,
+  } = useQuery(GET_COMPANY, {
+    fetchPolicy: "network-only",
+  });
   const router = useRouter();
   if (getCompanyLoading) return <div className="text-center py-10">Loading...</div>;
   if (getCompanyError) return <div className="text-red-600 py-4">Error: {getCompanyError.message}</div>;
@@ -24,7 +30,7 @@ function MyCompanyComp() {
           <Button
             type="primary"
             onClick={() => {
-              router.push("/companyedit");
+              router.push("/updatecompany");
             }}
           >
             Düzenle
@@ -78,7 +84,7 @@ function MyCompanyComp() {
           <Button
             type="dashed"
             onClick={() => {
-              router.push("/companyaddresscreate");
+              router.push("/createcompanyaddress");
             }}
           >
             Yeni Adres Ekle

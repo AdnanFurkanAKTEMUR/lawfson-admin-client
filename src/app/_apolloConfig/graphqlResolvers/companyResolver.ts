@@ -75,3 +75,31 @@ export const GET_COMPANY = gql`
     }
   }
 `;
+
+export const UPDATE_COMPANY = gql`
+  mutation UpdateCompany($input: updateCompanyInput) {
+    updateCompany(input: $input) {
+      companyName
+      companyPhone
+      companyTaxNumber
+      companyEmail
+      companyTaxOffice
+      companyType
+      description
+      id
+      registrationNumber
+      sector
+      status
+      website
+    }
+  }
+`;
+
+export const CREATE_COMPANY_ADDRESS = gql`
+  mutation CreateCompanyAddress($input: createCompanyAddressInput) {
+    createCompanyAddress(input: $input) {
+      msg
+      status
+    }
+  }
+`;
